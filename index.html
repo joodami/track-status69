@@ -7,65 +7,90 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f8f9fa; }
-        .navbar { background-color: #2c3e50; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .card-summary { border-radius: 15px; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
-        .card-summary:hover { transform: translateY(-5px); }
-        .status-pending { background-color: #fd7e14; color: white; border-radius: 20px; padding: 2px 12px; font-size: 0.85rem; display: inline-block; }
-        .status-success { background-color: #28a745; color: white; border-radius: 20px; padding: 2px 12px; font-size: 0.85rem; display: inline-block; }
-        .search-box { border-radius: 25px; padding: 12px 25px; border: 2px solid #dee2e6; font-size: 1.1rem; transition: all 0.3s; }
-        .search-box:focus { border-color: #3498db; box-shadow: 0 0 10px rgba(52,152,219,0.2); outline: none; }
-        .table-container { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .btn-view { border-radius: 15px; font-size: 0.85rem; padding: 4px 15px; }
-        #dataSection { display: none; } /* ซ่อนส่วนตารางในตอนแรก */
+        body { font-family: 'Sarabun', sans-serif; background-color: #f0f2f5; color: #2c3e50; }
+        .navbar { background-color: #2c3e50; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        /* สไตล์หน้า Login */
+        .login-container { max-width: 400px; margin: 100px auto; padding: 20px; }
+        .card-login { 
+            border-radius: 20px; 
+            border: none; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            padding: 40px 30px; 
+            background: white; 
+            text-align: center;
+        }
+        .login-icon { font-size: 50px; color: #3498db; margin-bottom: 20px; }
+        .pass-input { 
+            font-size: 32px; 
+            letter-spacing: 15px; 
+            text-align: center; 
+            border-radius: 15px; 
+            border: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .pass-input:focus { border-color: #3498db; box-shadow: 0 0 10px rgba(52,152,219,0.2); outline: none; }
+        .btn-login { 
+            border-radius: 25px; 
+            padding: 12px; 
+            width: 100%; 
+            font-weight: 600; 
+            background: #3498db; 
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-login:hover { background: #2980b9; transform: translateY(-2px); }
+
+        /* สไตล์หน้าแสดงผล */
+        #resultSection { display: none; padding-top: 20px; }
+        .card-table { border-radius: 15px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.05); background: white; overflow: hidden; }
+        .status-pending { background-color: #fd7e14; color: white; border-radius: 20px; padding: 3px 15px; font-size: 0.85rem; }
+        .status-success { background-color: #28a745; color: white; border-radius: 20px; padding: 3px 15px; font-size: 0.85rem; }
+        .btn-open { border-radius: 20px; font-size: 0.85rem; padding: 5px 15px; }
+        
+        /* สไตล์ Dashboard เล็กๆ หน้าผลลัพธ์ */
+        .user-info { background: #e9ecef; border-radius: 10px; padding: 15px; margin-bottom: 20px; border-left: 5px solid #3498db; }
     </style>
 </head>
 <body>
 
 <nav class="navbar navbar-dark mb-4">
-    <div class="container text-center">
-        <span class="navbar-brand mx-auto">📌 ระบบติดตามสถานะเสนอเซ็นหนังสือ</span>
+    <div class="container justify-content-center">
+        <span class="navbar-brand">📌 ตรวจสอบสถานะเสนอเซ็นหนังสือ</span>
     </div>
 </nav>
 
 <div class="container">
-    <div class="row mb-4">
-        <div class="col-md-6 mb-3">
-            <div class="card card-summary text-center p-3">
-                <h6 class="text-muted">กำลังดำเนินการ (รอพิจารณา)</h6>
-                <h2 id="countPending" class="text-warning">0</h2>
-            </div>
-        </div>
-        <div class="col-md-6 mb-3">
-            <div class="card card-summary text-center p-3">
-                <h6 class="text-muted">พิจารณาแล้ว</h6>
-                <h2 id="countSuccess" class="text-success">0</h2>
-            </div>
+    <div id="loginArea" class="login-container">
+        <div class="card-login">
+            <div class="login-icon">🔐</div>
+            <h4 class="fw-bold">ยินดีต้อนรับ</h4>
+            <p class="text-muted mb-4 small">กรุณาระบุเลขท้ายบัตรประชาชน 4 ตัว<br>เพื่อเรียกดูข้อมูลเอกสารของคุณ</p>
+            <input type="password" id="secretInput" class="form-control pass-input" maxlength="4" placeholder="****" onkeypress="if(event.keyCode==13) verifyAndSearch()">
+            <button class="btn btn-primary btn-login" onclick="verifyAndSearch()">ตกลง</button>
+            <div id="errorMsg" class="text-danger mt-3 small" style="display:none;">❌ ไม่พบข้อมูลที่สัมพันธ์กับรหัสนี้</div>
         </div>
     </div>
 
-    <div class="row mb-5 justify-content-center">
-        <div class="col-md-8 text-center">
-            <label class="form-label text-muted mb-3">ค้นหาเพื่อตรวจสอบสถานะเอกสารของคุณ</label>
-            <input type="text" id="searchInput" class="form-control search-box text-center" placeholder="🔍 พิมพ์ชื่อผู้เสนอเซ็น เพื่อค้นหา..." onkeyup="filterData()">
-        </div>
-    </div>
-
-    <div id="dataSection">
-        <div class="table-container">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0">รายการที่พบ</h5>
-                <small class="text-muted" id="searchResultCount"></small>
+    <div id="resultSection">
+        <div class="user-info d-flex justify-content-between align-items-center">
+            <div>
+                <span class="text-muted small">รหัสผู้ใช้งาน:</span> 
+                <strong id="displayCode">****</strong>
             </div>
+            <button class="btn btn-sm btn-outline-danger" onclick="location.reload()" style="border-radius: 15px;">ออกจากระบบ</button>
+        </div>
+
+        <div class="card-table p-3">
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
                             <th>วันที่</th>
                             <th>เรื่อง</th>
-                            <th>ผู้เสนอเซ็น</th>
                             <th class="text-center">สถานะ</th>
-                            <th class="text-center">จัดการ</th>
+                            <th class="text-center">เอกสาร</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -73,92 +98,73 @@
                 </table>
             </div>
         </div>
+        
+        <p class="text-center mt-4 text-muted small">© 2026 งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์</p>
     </div>
-    
-    <footer class="text-center mt-5 mb-4 text-muted small">
-        © 2026 งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์
-    </footer>
 </div>
 
 <script>
+    // ** ใส่ URL Web App ที่ได้จากการ Deploy Google Apps Script **
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLuCaClwlyTiMxxYl6fXMwK9WjE7pdvC3Sf1HdlDCRlHLy4OrwYSkxE8zfaMSjCdjOoQ/exec"; 
 
     let allData = [];
 
-    // โหลดข้อมูลจาก Google Sheets ครั้งเดียวตอนเปิดหน้าเว็บ
+    // ดึงข้อมูลล่วงหน้า
     async function fetchData() {
         try {
             const response = await fetch(GAS_WEB_APP_URL);
             allData = await response.json();
-            updateDashboard(allData);
         } catch (error) {
-            console.error("Fetch Error:", error);
+            console.error("Fetch error:", error);
         }
     }
 
-    function renderTable(data) {
+    function verifyAndSearch() {
+        const inputCode = document.getElementById('secretInput').value.trim();
+        const loginArea = document.getElementById('loginArea');
+        const resultSection = document.getElementById('resultSection');
         const tableBody = document.getElementById('tableBody');
-        const dataSection = document.getElementById('dataSection');
-        const resultCount = document.getElementById('searchResultCount');
-        
-        // ถ้าไม่มีการพิมพ์ หรือไม่มีข้อมูล ให้ซ่อนตาราง
-        if (data.length === 0) {
-            dataSection.style.display = 'none';
+        const errorMsg = document.getElementById('errorMsg');
+        const displayCode = document.getElementById('displayCode');
+
+        if (inputCode.length < 4) {
+            alert("กรุณากรอกรหัสให้ครบ 4 หลักค่ะ");
             return;
         }
 
-        dataSection.style.display = 'block';
-        resultCount.innerText = `พบ ${data.length} รายการ`;
-        tableBody.innerHTML = '';
-        
-        // แสดงข้อมูลจากล่าสุดไปเก่าสุด
-        [...data].reverse().forEach(item => {
-            const statusClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
+        // กรองข้อมูลเฉพาะรายการที่มี secretCode ตรงกับที่กรอก
+        const filtered = allData.filter(item => item.secretCode === inputCode);
+
+        if (filtered.length > 0) {
+            errorMsg.style.display = 'none';
+            loginArea.style.display = 'none';
+            resultSection.style.display = 'block';
+            displayCode.innerText = inputCode;
             
-            // สร้างปุ่มเปิดดูไฟล์ (ตรวจสอบว่ามีลิงก์หรือไม่)
-            const fileButton = item.file ? 
-                `<a href="${item.file}" target="_blank" class="btn btn-sm btn-outline-primary btn-view">📂 เปิดดูไฟล์</a>` : 
-                `<span class="text-muted small">ไม่มีไฟล์</span>`;
+            tableBody.innerHTML = '';
+            // แสดงรายการล่าสุดขึ้นก่อน
+            [...filtered].reverse().forEach(item => {
+                const statusClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
+                const fileLink = item.file ? 
+                    `<a href="${item.file}" target="_blank" class="btn btn-sm btn-primary btn-open">📂 เปิดดู</a>` : 
+                    `<span class="text-muted small">ไม่มีไฟล์</span>`;
 
-            const row = `
-                <tr>
-                    <td style="min-width: 100px;">${item.date}</td>
-                    <td>${item.title}</td>
-                    <td>${item.name}</td>
-                    <td class="text-center"><span class="${statusClass}">${item.status}</span></td>
-                    <td class="text-center">${fileButton}</td>
-                </tr>
-            `;
-            tableBody.innerHTML += row;
-        });
-    }
-
-    function updateDashboard(data) {
-        const pending = data.filter(i => i.status !== "พิจารณาแล้ว").length;
-        const success = data.filter(i => i.status === "พิจารณาแล้ว").length;
-        document.getElementById('countPending').innerText = pending;
-        document.getElementById('countSuccess').innerText = success;
-    }
-
-    function filterData() {
-        const query = document.getElementById('searchInput').value.trim().toLowerCase();
-        
-        // ถ้าช่องค้นหาว่างเปล่า ให้ซ่อนตารางทันที
-        if (query === "") {
-            document.getElementById('dataSection').style.display = 'none';
-            return;
+                const row = `
+                    <tr>
+                        <td>${item.date}</td>
+                        <td>${item.title}</td>
+                        <td class="text-center"><span class="${statusClass}">${item.status}</span></td>
+                        <td class="text-center">${fileLink}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        } else {
+            errorMsg.style.display = 'block';
         }
-
-        // กรองข้อมูลจากชื่อผู้เสนอ หรือ ชื่อเรื่อง
-        const filtered = allData.filter(item => 
-            (item.name && item.name.toLowerCase().includes(query)) || 
-            (item.title && item.title.toLowerCase().includes(query))
-        );
-        
-        renderTable(filtered);
     }
 
-    // เริ่มทำงานทันทีที่หน้าโหลด
+    // เรียกโหลดข้อมูลทันทีที่เปิดหน้าเว็บ
     fetchData();
 </script>
 
