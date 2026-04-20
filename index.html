@@ -161,12 +161,20 @@
             [...filtered].reverse().forEach(item => {
                 const statusClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
                 tableBody.innerHTML += `
-                    <tr>
-                        <td>${item.date}</td>
-                        <td>${item.title}</td>
-                        <td class="text-center"><span class="${statusClass}">${item.status}</span></td>
-                        <td class="text-center">${item.file ? `<a href="${item.file}" target="_blank" class="btn btn-sm btn-primary" style="border-radius:20px;">📂 เปิดดู</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}</td>
-                    </tr>`;
+                <tr>
+                    <td style="width: 100px; color: #666;">${item.date}</td>
+                    <td>
+                        <div style="font-weight: 600; color: #2c3e50;">${item.title}</div>
+                    </td>
+                    <td class="text-center" style="width: 120px;">
+                        <span class="${statusClass}">${item.status}</span>
+                    </td>
+                    <td class="text-center" style="width: 100px;">
+                        ${item.file ? 
+                            `<a href="${item.file}" target="_blank" class="btn btn-sm btn-primary btn-open">📂 เปิดดู</a>` : 
+                            '<span class="text-muted" style="font-size: 0.75rem;">ไม่มีไฟล์</span>'}
+                    </td>
+                </tr>`;
             });
         } else {
             document.getElementById('errorMsg').style.display = 'block';
