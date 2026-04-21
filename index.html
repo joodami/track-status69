@@ -110,12 +110,20 @@
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLuCaClwlyTiMxxYl6fXMwK9WjE7pdvC3Sf1HdlDCRlHLy4OrwYSkxE8zfaMSjCdjOoQ/exec"; 
     let allData = []; let filteredData = []; let currentPage = 1; const rowsPerPage = 20; let logoutTimer;
 
+// --- ฟังก์ชัน Auto Logout ปรับเป็น 10 นาที ---
     function resetLogoutTimer() {
         clearTimeout(logoutTimer);
+        // 10 นาที = 10 * 60 * 1000 มิลลิวินาที
         logoutTimer = setTimeout(() => {
-            Swal.fire({ title: 'หมดเวลาใช้งาน', text: 'เนื่องจากไม่มีการใช้งานนานเกิน 15 นาที ระบบจะพาคุณกลับหน้าแรก', icon: 'warning', confirmButtonColor: '#1a5276', confirmButtonText: 'ตกลง' })
+            Swal.fire({ 
+                title: 'หมดเวลาใช้งาน', 
+                text: 'เนื่องจากไม่มีการใช้งานนานเกิน 10 นาที ระบบจะพาคุณกลับหน้าแรก', 
+                icon: 'warning', 
+                confirmButtonColor: '#1a5276', 
+                confirmButtonText: 'ตกลง' 
+            })
             .then(() => { handleLogout(); });
-        }, 15 * 60 * 1000); 
+        }, 10 * 60 * 1000); // เปลี่ยนเลข 15 เป็น 10 ตรงนี้ค่ะ
     }
 
     window.onload = async () => {
