@@ -16,21 +16,29 @@
 
         body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); color: #2c3e50; overflow-x: hidden; }
         
-        /* Navbar ปรับปรุงเพื่อแก้ปัญหามือถือจอเล็ก */
-        .navbar { background: white !important; border-bottom: 2px solid var(--primary-color); padding: 8px 12px; position: sticky; top: 0; z-index: 1000; }
+        /* Navbar ปรับปรุงเพื่อรองรับชื่อเต็มในบรรทัดเดียว */
+        .navbar { background: white !important; border-bottom: 2px solid var(--primary-color); padding: 8px 10px; position: sticky; top: 0; z-index: 1000; }
         .navbar-brand { 
             color: var(--primary-color) !important; 
             display: flex; 
             align-items: center; 
-            gap: 10px; 
+            gap: 8px; 
             width: 100%; 
             margin: 0;
-            white-space: normal; /* ยอมให้ขึ้นบรรทัดใหม่ */
+            white-space: nowrap; /* ห้ามขึ้นบรรทัดใหม่ */
+            overflow: hidden;
         }
-        .school-logo { height: 35px; width: auto; flex-shrink: 0; }
-        .brand-container { display: flex; flex-direction: column; line-height: 1.2; flex-grow: 1; }
-        .brand-main-text { font-size: 0.9rem; font-weight: 600; color: var(--primary-color); }
-        .brand-sub-text { font-size: 0.7rem; font-weight: 400; color: #64748b; }
+        .school-logo { height: 32px; width: auto; flex-shrink: 0; }
+        .brand-container { display: flex; flex-direction: column; line-height: 1.1; flex-grow: 1; min-width: 0; }
+        
+        /* ใช้ขนาดตัวอักษรแบบยืดหยุ่นตามหน้าจอ (Viewport Units) */
+        .brand-main-text { 
+            font-size: 1rem; 
+            font-weight: 600; 
+            color: var(--primary-color);
+            letter-spacing: -0.2px;
+        }
+        .brand-sub-text { font-size: 0.75rem; font-weight: 400; color: #64748b; }
 
         /* Login Card */
         .login-container { max-width: 400px; margin: 30px auto; padding: 15px; }
@@ -38,15 +46,14 @@
             border-radius: 25px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.07); 
             padding: 30px 20px; background: white; text-align: center;
         }
-        /* ส่วนแสดงไอคอนกุญแจ */
-        .login-visual { font-size: 55px; color: var(--primary-color); margin-bottom: 15px; }
+        .login-visual { font-size: 50px; color: var(--primary-color); margin-bottom: 15px; }
         
         .pass-group { position: relative; margin-bottom: 20px; }
         .pass-input { 
             font-size: 24px; letter-spacing: 12px; text-align: center; 
             border-radius: 15px; border: 2px solid #edf2f7; padding: 12px;
         }
-        .eye-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #cbd5e0; letter-spacing: normal; font-size: 18px; }
+        .eye-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #cbd5e0; letter-spacing: normal; }
 
         .btn-login { 
             border-radius: 15px; padding: 12px; width: 100%; font-weight: 600; 
@@ -61,16 +68,15 @@
             position: relative; border-top: 4px solid var(--primary-color);
         }
         .logout-corner { position: absolute; top: 12px; right: 12px; }
-        .user-label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .user-label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 2px; }
         .user-name { color: var(--primary-color); font-size: 1.1rem; font-weight: 600; padding-right: 35px; word-break: break-word; }
 
-        /* Desktop Table View */
+        /* View Switching */
         .desktop-table { display: block; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .table thead { background-color: #f1f5f9; }
         .table th { border: none; padding: 15px; font-size: 0.85rem; color: #64748b; }
         .table td { padding: 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 
-        /* Mobile Card View */
         .mobile-cards { display: none; }
         .data-card {
             background: white; border-radius: 18px; padding: 18px; margin-bottom: 12px;
@@ -88,14 +94,21 @@
             font-size: 0.75rem; padding: 7px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
         }
 
-        /* ปรับแต่งสำหรับมือถือขนาดเล็กเป็นพิเศษ */
+        /* ปรับขนาดตัวอักษรในมือถือแบบพิเศษ */
         @media (max-width: 768px) {
             .desktop-table { display: none; }
             .mobile-cards { display: block; }
-            .brand-main-text { font-size: 0.82rem; }
-            .brand-sub-text { font-size: 0.65rem; }
-            .school-logo { height: 28px; } /* ย่อโลโก้ลงอีก */
-            .navbar { padding: 8px 10px; }
+            .brand-main-text { 
+                font-size: 3.6vw; /* ปรับขนาดตามความกว้างจอโดยอัตโนมัติ */
+                letter-spacing: -0.5px;
+            }
+            .brand-sub-text { font-size: 2.8vw; }
+            .school-logo { height: 26px; }
+        }
+
+        /* สำหรับมือถือที่จอเล็กมากจริงๆ (เช่น iPhone SE) */
+        @media (max-width: 320px) {
+            .brand-main-text { font-size: 3.3vw; }
         }
     </style>
 </head>
@@ -106,7 +119,7 @@
         <div class="navbar-brand">
             <img src="https://via.placeholder.com/100x100?text=LOGO" alt="Logo" class="school-logo">
             <div class="brand-container">
-                <span class="brand-main-text">ระบบติดตามสถานะและคลังหนังสือฯ ออนไลน์</span>
+                <span class="brand-main-text">ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์</span>
                 <span class="brand-sub-text">โรงเรียนพิมานพิทยาสรรค์</span>
             </div>
         </div>
@@ -156,10 +169,6 @@
             <span class="text-muted small">หน้า <span id="pageInfo" class="fw-bold">1 / 1</span></span>
             <button id="nextBtn" class="btn btn-light btn-sm px-3 shadow-sm" style="border-radius:10px" onclick="changePage(1)">ถัดไป</button>
         </div>
-        
-        <footer class="text-center mt-5 mb-4 text-muted" style="font-size: 0.6rem; opacity: 0.7;">
-            © 2026 งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์
-        </footer>
     </div>
 </div>
 
@@ -169,25 +178,16 @@
     let filteredData = []; 
     let currentPage = 1;
     const rowsPerPage = 20;
-    let logoutTimer;
 
     function togglePassword() {
         const input = document.getElementById('secretInput');
         const eye = document.getElementById('toggleEye');
         if (input.type === "password") {
-            input.type = "text"; 
-            eye.classList.replace('fa-eye', 'fa-eye-slash');
+            input.type = "text"; eye.classList.replace('fa-eye', 'fa-eye-slash');
         } else {
-            input.type = "password"; 
-            eye.classList.replace('fa-eye-slash', 'fa-eye');
+            input.type = "password"; eye.classList.replace('fa-eye-slash', 'fa-eye');
         }
     }
-
-    function resetLogoutTimer() {
-        clearTimeout(logoutTimer);
-        logoutTimer = setTimeout(() => { location.reload(); }, 5 * 60 * 1000); 
-    }
-    window.onload = resetLogoutTimer; window.onmousemove = resetLogoutTimer; window.onkeypress = resetLogoutTimer;
 
     async function fetchData() {
         try {
@@ -204,43 +204,22 @@
             document.getElementById('loginArea').style.display = 'none';
             document.getElementById('resultSection').style.display = 'block';
             document.getElementById('displayName').innerText = filteredData[0].userName; 
-            currentPage = 1; 
-            displayData();
+            currentPage = 1; displayData();
         } else { document.getElementById('errorMsg').style.display = 'block'; }
     }
 
     function displayData() {
         const tableBody = document.getElementById('tableBody');
         const mobileCards = document.getElementById('mobileCards');
-        tableBody.innerHTML = '';
-        mobileCards.innerHTML = '';
-
+        tableBody.innerHTML = ''; mobileCards.innerHTML = '';
         const start = (currentPage - 1) * rowsPerPage;
         const end = start + rowsPerPage;
         const paginatedItems = filteredData.slice(start, end);
 
         paginatedItems.forEach(item => {
             const statusClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
-            
-            tableBody.innerHTML += `
-                <tr>
-                    <td style="color: #94a3b8; font-size: 0.85rem; width: 110px;">${item.date}</td>
-                    <td><div style="font-weight: 600; color: #1e293b;">${item.title}</div></td>
-                    <td class="text-center"><span class="${statusClass}">${item.status}</span></td>
-                    <td class="text-center">
-                        ${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิด</a>` : '<span class="text-muted small">-</span>'}
-                    </td>
-                </tr>`;
-
-            mobileCards.innerHTML += `
-                <div class="data-card">
-                    <div class="card-date">${item.date}</div>
-                    <div class="card-title">${item.title}</div>
-                    <div class="card-footer">
-                        <span class="${statusClass}">${item.status}</span>
-                        ${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> ดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}
-                    </div>
-                </div>`;
+            tableBody.innerHTML += `<tr><td style="color:#94a3b8; font-size:0.85rem; width:110px;">${item.date}</td><td><div style="font-weight:600; color:#1e293b;">${item.title}</div></td><td class="text-center"><span class="${statusClass}">${item.status}</span></td><td class="text-center">${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิด</a>` : '-'}</td></tr>`;
+            mobileCards.innerHTML += `<div class="data-card"><div class="card-date">${item.date}</div><div class="card-title">${item.title}</div><div class="card-footer"><span class="${statusClass}">${item.status}</span>${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> ดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}</div></div>`;
         });
         updatePaginationControls();
     }
@@ -253,9 +232,7 @@
     }
 
     function changePage(direction) {
-        currentPage += direction;
-        displayData();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        currentPage += direction; displayData(); window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     fetchData();
