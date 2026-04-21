@@ -16,13 +16,11 @@
 
         body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); color: #2c3e50; overflow-x: hidden; }
         
-        /* Navbar - ปรับขนาด Desktop ให้ชัดเจนขึ้น */
+        /* Navbar - รองรับ Desktop ชัดเจน และ Mobile บรรทัดเดียว */
         .navbar { background: white !important; border-bottom: 2px solid var(--primary-color); padding: 12px 15px; position: sticky; top: 0; z-index: 1000; }
         .navbar-brand { color: var(--primary-color) !important; display: flex; align-items: center; gap: 12px; width: 100%; margin: 0; white-space: nowrap; overflow: hidden; }
         .school-logo { height: 45px; width: auto; flex-shrink: 0; }
         .brand-container { display: flex; flex-direction: column; line-height: 1.2; flex-grow: 1; min-width: 0; }
-        
-        /* ขนาดฟอนต์ Desktop */
         .brand-main-text { font-size: 1.25rem; font-weight: 600; color: var(--primary-color); letter-spacing: -0.2px; }
         .brand-sub-text { font-size: 0.9rem; font-weight: 400; color: #64748b; }
 
@@ -40,7 +38,7 @@
         .user-info-card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); position: relative; border-top: 5px solid var(--primary-color); }
         .logout-corner { position: absolute; top: 20px; right: 20px; }
         .user-label { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-        .user-name { color: var(--primary-color); font-size: 1.4rem; font-weight: 600; padding-right: 50px; }
+        .user-name { color: var(--primary-color); font-size: 1.4rem; font-weight: 600; padding-right: 50px; word-break: break-word; }
 
         /* Tables & Cards */
         .desktop-table { display: block; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
@@ -59,7 +57,7 @@
         .btn-open { background: var(--primary-color); color: white; border-radius: 10px; font-size: 0.85rem; padding: 8px 18px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-open:hover { background: var(--accent-color); color: white; }
 
-        /* Footer ปรับปรุงใหม่ */
+        /* Footer */
         .site-footer { text-align: center; margin-top: 60px; padding: 30px 0; border-top: 1px solid #e2e8f0; }
         .footer-main { font-size: 0.95rem; font-weight: 600; color: #475569; margin-bottom: 5px; }
         .footer-dev { font-size: 0.85rem; color: #94a3b8; }
@@ -82,7 +80,7 @@
 <nav class="navbar">
     <div class="container">
         <div class="navbar-brand">
-            <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="school-logo">
+            <img src="https://via.placeholder.com/100x100?text=LOGO" alt="Logo" class="school-logo">
             <div class="brand-container">
                 <span class="brand-main-text">ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์</span>
                 <span class="brand-sub-text">โรงเรียนพิมานพิทยาสรรค์</span>
@@ -136,16 +134,33 @@
 
     <footer class="site-footer">
         <div class="footer-main">ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์</div>
-        <div class="footer-dev">
-            พัฒนาโดย <span class="footer-school">งานสารบรรณโรงเรียนพิมานพิทยาสรรค์</span>
-        </div>
+        <div class="footer-dev">พัฒนาโดย <span class="footer-school">งานสารบรรณโรงเรียนพิมานพิทยาสรรค์</span></div>
         <div class="mt-2" style="font-size: 0.75rem; color: #cbd5e0;">© 2026 All Rights Reserved</div>
     </footer>
 </div>
 
 <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLuCaClwlyTiMxxYl6fXMwK9WjE7pdvC3Sf1HdlDCRlHLy4OrwYSkxE8zfaMSjCdjOoQ/exec"; 
-    let allData = []; let filteredData = []; let currentPage = 1; const rowsPerPage = 20;
+    let allData = []; 
+    let filteredData = []; 
+    let currentPage = 1; 
+    const rowsPerPage = 20;
+    let logoutTimer;
+
+    // --- ฟังก์ชัน Auto Logout ปรับเป็น 15 นาที ---
+    function resetLogoutTimer() {
+        clearTimeout(logoutTimer);
+        // 15 นาที = 15 * 60 * 1000 มิลลิวินาที
+        logoutTimer = setTimeout(() => {
+            alert("เซสชันหมดอายุเนื่องจากไม่มีการใช้งานนานเกิน 15 นาที");
+            location.reload();
+        }, 15 * 60 * 1000); 
+    }
+
+    window.onload = resetLogoutTimer;
+    window.onmousemove = resetLogoutTimer;
+    window.onkeypress = resetLogoutTimer;
+    window.ontouchstart = resetLogoutTimer;
 
     function togglePassword() {
         const input = document.getElementById('secretInput');
@@ -154,18 +169,27 @@
         else { input.type = "password"; eye.classList.replace('fa-eye-slash', 'fa-eye'); }
     }
 
-    async function fetchData() { try { const response = await fetch(GAS_WEB_APP_URL); allData = await response.json(); } catch (e) { console.error(e); } }
+    async function fetchData() { 
+        try { 
+            const response = await fetch(GAS_WEB_APP_URL); 
+            allData = await response.json(); 
+        } catch (e) { console.error(e); } 
+    }
 
     function verifyAndSearch() {
         const inputCode = document.getElementById('secretInput').value.trim();
-        if (inputCode.length < 4) { alert("กรอก 4 หลักค่ะ"); return; }
+        if (inputCode.length < 4) { alert("กรอกรหัส 4 หลักค่ะ"); return; }
         filteredData = allData.filter(item => item.secretCode === inputCode).reverse();
         if (filteredData.length > 0) {
             document.getElementById('loginArea').style.display = 'none';
             document.getElementById('resultSection').style.display = 'block';
             document.getElementById('displayName').innerText = filteredData[0].userName;
-            currentPage = 1; displayData();
-        } else { document.getElementById('errorMsg').style.display = 'block'; }
+            currentPage = 1; 
+            displayData();
+            resetLogoutTimer();
+        } else { 
+            document.getElementById('errorMsg').style.display = 'block'; 
+        }
     }
 
     function displayData() {
@@ -175,6 +199,7 @@
         const start = (currentPage - 1) * rowsPerPage;
         const end = start + rowsPerPage;
         const items = filteredData.slice(start, end);
+        
         items.forEach(item => {
             const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
             tableBody.innerHTML += `<tr><td>${item.date}</td><td><div style="font-weight:600; color:#1e293b;">${item.title}</div></td><td class="text-center"><span class="${sClass}">${item.status}</span></td><td class="text-center">${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดู</a>` : '-'}</td></tr>`;
@@ -190,7 +215,13 @@
         document.getElementById('nextBtn').disabled = (currentPage === total);
     }
 
-    function changePage(dir) { currentPage += dir; displayData(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function changePage(dir) { 
+        currentPage += dir; 
+        displayData(); 
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        resetLogoutTimer(); 
+    }
+
     fetchData();
 </script>
 </body>
