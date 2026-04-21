@@ -9,161 +9,138 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #1a5276; /* สีน้ำเงินเข้มภูมิฐาน */
+            --primary-color: #1a5276;
             --accent-color: #3498db;
-            --bg-color: #f0f4f8;
+            --bg-color: #f8fafc;
         }
 
-        body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); color: #2c3e50; line-height: 1.6; }
+        body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); color: #2c3e50; }
         
-        /* Navbar สไตล์มินิมอล */
-        .navbar { background: white !important; border-bottom: 2px solid var(--primary-color); padding: 15px 0; }
-        .navbar-brand { color: var(--primary-color) !important; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-        .school-logo { height: 45px; width: auto; }
+        .navbar { background: white !important; border-bottom: 2px solid var(--primary-color); padding: 12px 0; sticky: top; z-index: 1000; }
+        .navbar-brand { color: var(--primary-color) !important; font-weight: 600; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
+        .school-logo { height: 40px; width: auto; }
 
-        /* หน้า Login */
-        .login-container { max-width: 420px; margin: 60px auto; padding: 20px; }
+        /* Login Card */
+        .login-container { max-width: 400px; margin: 60px auto; padding: 20px; }
         .card-login { 
-            border-radius: 25px; border: none; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08); 
+            border-radius: 25px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.07); 
             padding: 40px 30px; background: white; 
-            position: relative; overflow: hidden;
-        }
-        .card-login::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--primary-color);
         }
         
-        .pass-group { position: relative; margin-bottom: 25px; }
+        .pass-group { position: relative; margin-bottom: 20px; }
         .pass-input { 
             font-size: 24px; letter-spacing: 12px; text-align: center; 
-            border-radius: 12px; border: 2px solid #edf2f7; 
-            padding: 12px; transition: 0.3s; background: #f8fafc;
+            border-radius: 15px; border: 2px solid #edf2f7; padding: 12px;
         }
-        .pass-input:focus { border-color: var(--accent-color); box-shadow: none; background: white; }
         .eye-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #cbd5e0; letter-spacing: normal; }
 
         .btn-login { 
-            border-radius: 12px; padding: 14px; width: 100%; font-weight: 600; 
-            background: var(--primary-color); border: none; color: white; 
-            transition: 0.3s; box-shadow: 0 4px 12px rgba(26, 82, 118, 0.2);
+            border-radius: 15px; padding: 12px; width: 100%; font-weight: 600; 
+            background: var(--primary-color); border: none; color: white;
         }
-        .btn-login:hover { background: #154360; transform: translateY(-1px); }
 
-        /* หน้าแสดงผล */
-        #resultSection { display: none; padding-top: 30px; }
+        /* Result Section */
+        #resultSection { display: none; padding: 20px 0; }
         .user-info { 
-            background: white; border-radius: 20px; padding: 20px; 
-            margin-bottom: 25px; border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-        .card-table { 
-            border-radius: 20px; border: none; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.04); 
-            background: white; overflow: hidden; 
+            background: white; border-radius: 20px; padding: 15px 20px; 
+            margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border-left: 5px solid var(--primary-color);
         }
 
-        .table thead { background-color: #f8fafc; }
-        .table th { padding: 15px; color: #64748b; font-weight: 600; font-size: 0.85rem; border: none; }
-        .table td { padding: 15px 10px; border-bottom: 1px solid #f1f5f9; }
+        /* Desktop Table View (Hidden on Mobile) */
+        .desktop-table { display: block; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .table thead { background-color: #f1f5f9; }
+        .table th { border: none; padding: 15px; font-size: 0.85rem; color: #64748b; }
+        .table td { padding: 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 
-        /* ป้ายสถานะมินิมอล */
-        .status-pending { background: #fff7ed; color: #c2410c; border-radius: 8px; padding: 4px 12px; font-size: 0.8rem; font-weight: 600; border: 1px solid #ffedd5; }
-        .status-success { background: #f0fdf4; color: #15803d; border-radius: 8px; padding: 4px 12px; font-size: 0.8rem; font-weight: 600; border: 1px solid #dcfce7; }
+        /* Mobile Card View (Hidden on Desktop) */
+        .mobile-cards { display: none; }
+        .data-card {
+            background: white; border-radius: 18px; padding: 20px; margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04); position: relative;
+            border: 1px solid #f1f5f9;
+        }
+        .card-date { font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; }
+        .card-title { font-weight: 600; color: #1e293b; font-size: 1rem; line-height: 1.4; margin-bottom: 15px; padding-right: 20px; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; pt-15; padding-top: 15px; }
+
+        /* Status Labels */
+        .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; padding: 4px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
+        .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; padding: 4px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
         
         .btn-open { 
-            background: white; color: var(--primary-color); 
-            border: 1px solid var(--primary-color); border-radius: 8px; 
-            font-size: 0.8rem; padding: 6px 12px; transition: 0.2s;
+            background: var(--primary-color); color: white; border-radius: 10px; 
+            font-size: 0.8rem; padding: 8px 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
         }
-        .btn-open:hover { background: var(--primary-color); color: white; }
 
-        .pagination-container { margin-top: 25px; }
-
-        @media (max-width: 576px) {
-            .navbar-brand { font-size: 0.95rem; }
-            .school-logo { height: 35px; }
-            .card-login { padding: 30px 20px; }
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .desktop-table { display: none; }
+            .mobile-cards { display: block; }
+            .navbar-brand span { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
 
-<nav class="navbar sticky-top">
+<nav class="navbar">
     <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="school-logo">
-            <span>ตรวจสอบสถานะเสนอเซ็นหนังสือ</span>
-        </a>
+        <div class="navbar-brand">
+            <img src="https://via.placeholder.com/100x100?text=LOGO" alt="Logo" class="school-logo">
+            <span>ตรวจสอบสถานะหนังสือ</span>
+        </div>
     </div>
 </nav>
 
 <div class="container">
     <div id="loginArea" class="login-container">
         <div class="card-login text-center">
-            <h4 class="fw-bold mb-1">เข้าสู่ระบบ</h4>
-            <p class="text-muted mb-4 small">งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์</p>
-            
-            <label class="d-block text-start mb-2 small text-muted">ระบุเลขท้ายเบอร์โทรศัพท์ 4 ตัว</p>
+            <h5 class="fw-bold mb-3">เข้าสู่ระบบติดตามสถานะ</h5>
+            <p class="text-muted small mb-4">ระบุเลขท้ายเบอร์โทรศัพท์ 4 ตัว</p>
             <div class="pass-group">
                 <input type="password" id="secretInput" class="form-control pass-input" maxlength="4" placeholder="****" onkeypress="if(event.keyCode==13) verifyAndSearch()">
                 <i class="fa-solid fa-eye eye-icon" id="toggleEye" onclick="togglePassword()"></i>
             </div>
-
-            <button class="btn btn-primary btn-login" onclick="verifyAndSearch()">เข้าสู่ระบบ</button>
-            <div id="errorMsg" class="text-danger mt-3 small" style="display:none;">❌ ไม่พบข้อมูลกรุณาตรวจสอบรหัสอีกครั้ง</div>
+            <button class="btn btn-primary btn-login" onclick="verifyAndSearch()">ยืนยันรหัสเข้าดู</button>
+            <div id="errorMsg" class="text-danger mt-3 small" style="display:none;">❌ รหัสไม่ถูกต้อง กรุณาลองใหม่ค่ะ</div>
         </div>
     </div>
 
     <div id="resultSection">
         <div class="user-info d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-3">
-                <div style="width: 45px; height: 45px; background: #e0e7ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: bold;">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-                <div>
-                    <div class="text-muted" style="font-size: 0.7rem; text-transform: uppercase;">ผู้ใช้งานระบบ</div>
-                    <strong id="displayName" style="font-size: 1.1rem; color: var(--primary-color);">กำลังโหลด...</strong>
-                </div>
+            <div>
+                <small class="text-muted d-block">ยินดีต้อนรับ</small>
+                <strong id="displayName" style="color: var(--primary-color);">กำลังโหลด...</strong>
             </div>
-            <button class="btn btn-sm btn-outline-secondary" onclick="location.reload()" style="border-radius: 10px; font-size: 0.75rem;">
-                <i class="fa-solid fa-right-from-bracket me-1"></i> ออกจากระบบ
+            <button class="btn btn-sm btn-link text-danger text-decoration-none" onclick="location.reload()">
+                <i class="fa-solid fa-power-off"></i> ออกจากระบบ
             </button>
         </div>
 
-        <div class="card-table p-2">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead>
-                        <tr>
-                            <th>วันที่</th>
-                            <th>รายละเอียดเรื่อง</th>
-                            <th class="text-center">สถานะ</th>
-                            <th class="text-center">การจัดการ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
-            </div>
+        <div class="desktop-table">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr><th>วันที่</th><th>เรื่องที่เสนอเซ็น</th><th class="text-center">สถานะ</th><th class="text-center">ไฟล์เอกสาร</th></tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
         </div>
 
-        <div class="pagination-container d-flex justify-content-between align-items-center">
-            <button id="prevBtn" class="btn btn-light btn-sm px-3" style="border-radius:10px" onclick="changePage(-1)">
-                <i class="fa-solid fa-chevron-left"></i> ย้อนกลับ
-            </button>
-            <span class="text-muted" style="font-size: 0.85rem;">หน้า <span id="pageInfo" class="fw-bold text-dark">1 / 1</span></span>
-            <button id="nextBtn" class="btn btn-light btn-sm px-3" style="border-radius:10px" onclick="changePage(1)">
-                ถัดไป <i class="fa-solid fa-chevron-right"></i>
-            </button>
+        <div id="mobileCards" class="mobile-cards"></div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4 px-2">
+            <button id="prevBtn" class="btn btn-outline-secondary btn-sm px-3" style="border-radius:12px" onclick="changePage(-1)">ก่อนหน้า</button>
+            <span class="text-muted small">หน้า <span id="pageInfo" class="fw-bold">1 / 1</span></span>
+            <button id="nextBtn" class="btn btn-outline-secondary btn-sm px-3" style="border-radius:12px" onclick="changePage(1)">ถัดไป</button>
         </div>
         
-        <footer class="text-center mt-5 mb-4">
-            <p class="text-muted" style="font-size: 0.75rem;">© 2026 งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์<br>สงวนลิขสิทธิ์ข้อมูลตามระเบียบงานสารบรรณ</p>
+        <footer class="text-center mt-5 mb-4 text-muted" style="font-size: 0.7rem;">
+            © 2026 งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์
         </footer>
     </div>
 </div>
 
 <script>
-    // --- (ส่วนของ JavaScript เหมือนเดิมจากรอบที่แล้ว แต่ใช้ฟังก์ชันแสดงผลที่สอดคล้องกับ Class ใหม่นะคะ) ---
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLuCaClwlyTiMxxYl6fXMwK9WjE7pdvC3Sf1HdlDCRlHLy4OrwYSkxE8zfaMSjCdjOoQ/exec"; 
     let allData = [];
     let filteredData = []; 
@@ -175,11 +152,9 @@
         const input = document.getElementById('secretInput');
         const eye = document.getElementById('toggleEye');
         if (input.type === "password") {
-            input.type = "text";
-            eye.classList.replace('fa-eye', 'fa-eye-slash');
+            input.type = "text"; eye.classList.replace('fa-eye', 'fa-eye-slash');
         } else {
-            input.type = "password";
-            eye.classList.replace('fa-eye-slash', 'fa-eye');
+            input.type = "password"; eye.classList.replace('fa-eye-slash', 'fa-eye');
         }
     }
 
@@ -205,28 +180,44 @@
             document.getElementById('resultSection').style.display = 'block';
             document.getElementById('displayName').innerText = filteredData[0].userName; 
             currentPage = 1; 
-            displayTable();
+            displayData();
         } else { document.getElementById('errorMsg').style.display = 'block'; }
     }
 
-    function displayTable() {
+    function displayData() {
         const tableBody = document.getElementById('tableBody');
+        const mobileCards = document.getElementById('mobileCards');
         tableBody.innerHTML = '';
+        mobileCards.innerHTML = '';
+
         const start = (currentPage - 1) * rowsPerPage;
         const end = start + rowsPerPage;
         const paginatedItems = filteredData.slice(start, end);
 
         paginatedItems.forEach(item => {
             const statusClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
+            
+            // สร้าง View สำหรับ Desktop
             tableBody.innerHTML += `
                 <tr>
-                    <td style="color: #64748b; font-size: 0.85rem;">${item.date}</td>
-                    <td><div style="font-weight: 600; color: #1e293b; font-size: 0.95rem;">${item.title}</div></td>
+                    <td style="color: #94a3b8; font-size: 0.85rem; width: 110px;">${item.date}</td>
+                    <td><div style="font-weight: 600; color: #1e293b;">${item.title}</div></td>
                     <td class="text-center"><span class="${statusClass}">${item.status}</span></td>
                     <td class="text-center">
-                        ${item.file ? `<a href="${item.file}" target="_blank" class="btn btn-sm btn-open"><i class="fa-solid fa-file-pdf me-1"></i> เปิดดู</a>` : '<span class="text-muted" style="font-size:0.7rem">ไม่มีไฟล์</span>'}
+                        ${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fa-solid fa-file-pdf"></i> เปิดดู</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}
                     </td>
                 </tr>`;
+
+            // สร้าง View สำหรับ Mobile (Card)
+            mobileCards.innerHTML += `
+                <div class="data-card">
+                    <div class="card-date">${item.date}</div>
+                    <div class="card-title">${item.title}</div>
+                    <div class="card-footer">
+                        <span class="${statusClass}">${item.status}</span>
+                        ${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fa-solid fa-file-pdf"></i> ดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}
+                    </div>
+                </div>`;
         });
         updatePaginationControls();
     }
@@ -240,7 +231,7 @@
 
     function changePage(direction) {
         currentPage += direction;
-        displayTable();
+        displayData();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
