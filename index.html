@@ -9,23 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        :root {
-            --primary-color: #1a5276;
-            --accent-color: #3498db;
-            --bg-color: #f8fafc;
-        }
-
+        :root { --primary-color: #1a5276; --accent-color: #3498db; --bg-color: #f8fafc; }
         body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); color: #2c3e50; overflow-x: hidden; }
-        
-        /* Navbar */
         .navbar { background: white !important; border-bottom: 2px solid var(--primary-color); padding: 12px 15px; position: sticky; top: 0; z-index: 1000; }
         .navbar-brand { color: var(--primary-color) !important; display: flex; align-items: center; gap: 12px; width: 100%; margin: 0; white-space: nowrap; overflow: hidden; }
         .school-logo { height: 45px; width: auto; flex-shrink: 0; }
         .brand-container { display: flex; flex-direction: column; line-height: 1.2; flex-grow: 1; min-width: 0; }
         .brand-main-text { font-size: 1.25rem; font-weight: 600; color: var(--primary-color); letter-spacing: -0.2px; }
         .brand-sub-text { font-size: 0.9rem; font-weight: 400; color: #64748b; }
-
-        /* Login Card */
         .login-container { max-width: 400px; margin: 50px auto; padding: 15px; }
         .card-login { border-radius: 25px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.07); padding: 40px 30px; background: white; text-align: center; }
         .login-visual { font-size: 60px; color: var(--primary-color); margin-bottom: 20px; }
@@ -33,57 +24,41 @@
         .pass-input { font-size: 28px; letter-spacing: 12px; text-align: center; border-radius: 15px; border: 2px solid #edf2f7; padding: 15px; }
         .eye-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #cbd5e0; letter-spacing: normal; font-size: 20px; }
         .btn-login { border-radius: 15px; padding: 14px; width: 100%; font-weight: 600; background: var(--primary-color); border: none; color: white; font-size: 1.1rem; transition: 0.3s; }
-        .btn-login:hover { background: var(--accent-color); transform: translateY(-2px); }
-
-        /* Result Section */
         #resultSection { display: none; padding: 20px 0; }
         .user-info-card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); position: relative; border-top: 5px solid var(--primary-color); }
         .logout-corner { position: absolute; top: 20px; right: 20px; }
         .user-label { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
         .user-name { color: var(--primary-color); font-size: 1.4rem; font-weight: 600; padding-right: 50px; word-break: break-word; }
-
-        /* Tables & Cards */
         .desktop-table { display: block; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .table thead { background-color: #f1f5f9; }
         .table th { border: none; padding: 18px; font-size: 0.95rem; color: #64748b; font-weight: 600; }
         .table td { padding: 18px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 1rem; }
-        
         .mobile-cards { display: none; }
         .data-card { background: white; border-radius: 18px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; }
         .card-date { font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; }
         .card-title { font-weight: 600; color: #1e293b; font-size: 1rem; line-height: 1.4; margin-bottom: 15px; }
         .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 15px; }
-
         .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
         .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
         .btn-open { background: var(--primary-color); color: white; border-radius: 10px; font-size: 0.85rem; padding: 8px 18px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-
-        /* Footer */
         .site-footer { text-align: center; margin-top: 60px; padding: 30px 15px; border-top: 1px solid #e2e8f0; }
         .footer-main { font-size: 0.95rem; font-weight: 600; color: #475569; margin-bottom: 5px; }
         .footer-dev { font-size: 0.85rem; color: #94a3b8; }
         .footer-school { color: var(--primary-color); font-weight: 600; }
-
         @media (max-width: 768px) {
-            .desktop-table { display: none; }
-            .mobile-cards { display: block; }
-            .brand-main-text { font-size: 3.6vw; letter-spacing: -0.5px; }
-            .brand-sub-text { font-size: 2.8vw; }
-            .school-logo { height: 30px; }
-            .navbar { padding: 10px; }
-            .user-name { font-size: 1.1rem; }
-            .site-footer { margin-top: 40px; padding: 20px 10px; }
+            .desktop-table { display: none; } .mobile-cards { display: block; }
+            .brand-main-text { font-size: 3.6vw; } .brand-sub-text { font-size: 2.8vw; }
+            .school-logo { height: 30px; } .navbar { padding: 10px; }
             .footer-main { font-size: 3.2vw; white-space: nowrap; }
             .footer-dev { font-size: 2.8vw; white-space: nowrap; }
         }
     </style>
 </head>
 <body>
-
 <nav class="navbar">
     <div class="container">
         <div class="navbar-brand">
-            <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="school-logo">
+            <img src="https://via.placeholder.com/100x100?text=LOGO" alt="Logo" class="school-logo">
             <div class="brand-container">
                 <span class="brand-main-text">ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์</span>
                 <span class="brand-sub-text">โรงเรียนพิมานพิทยาสรรค์</span>
@@ -91,7 +66,6 @@
         </div>
     </div>
 </nav>
-
 <div class="container">
     <div id="loginArea" class="login-container">
         <div class="card-login">
@@ -105,16 +79,14 @@
             <button class="btn btn-primary btn-login" onclick="verifyAndSearch()">ตกลง</button>
         </div>
     </div>
-
     <div id="resultSection">
         <div class="user-info-card">
             <div class="logout-corner">
-                <button class="btn btn-outline-danger border-0" onclick="location.reload()" title="ออกจากระบบ"><i class="fas fa-power-off fa-lg"></i></button>
+                <button class="btn btn-outline-danger border-0" onclick="handleLogout()" title="ออกจากระบบ"><i class="fas fa-power-off fa-lg"></i></button>
             </div>
             <div class="user-label">ชื่อคุณครูผู้ใช้งาน</div>
             <div id="displayName" class="user-name">กำลังโหลด...</div>
         </div>
-
         <div class="mobile-cards" id="mobileCards"></div>
         <div class="desktop-table">
             <table class="table table-hover align-middle mb-0">
@@ -122,43 +94,42 @@
                 <tbody id="tableBody"></tbody>
             </table>
         </div>
-
         <div class="d-flex justify-content-between align-items-center mt-4 px-1">
             <button id="prevBtn" class="btn btn-light shadow-sm px-4" style="border-radius:12px" onclick="changePage(-1)">ก่อนหน้า</button>
             <span class="text-muted">หน้า <span id="pageInfo" class="fw-bold text-dark">1 / 1</span></span>
             <button id="nextBtn" class="btn btn-light shadow-sm px-4" style="border-radius:12px" onclick="changePage(1)">ถัดไป</button>
         </div>
     </div>
-
     <footer class="site-footer">
         <div class="footer-main">ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์</div>
         <div class="footer-dev">พัฒนาโดย <span class="footer-school">งานสารบรรณโรงเรียนพิมานพิทยาสรรค์</span></div>
         <div class="mt-2" style="font-size: 0.75rem; color: #cbd5e0;">© 2026 All Rights Reserved</div>
     </footer>
 </div>
-
 <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLuCaClwlyTiMxxYl6fXMwK9WjE7pdvC3Sf1HdlDCRlHLy4OrwYSkxE8zfaMSjCdjOoQ/exec"; 
-    let allData = []; let filteredData = []; let currentPage = 1; const rowsPerPage = 20;
-    let logoutTimer;
+    let allData = []; let filteredData = []; let currentPage = 1; const rowsPerPage = 20; let logoutTimer;
 
     function resetLogoutTimer() {
         clearTimeout(logoutTimer);
         logoutTimer = setTimeout(() => {
-            Swal.fire({
-                title: 'หมดเวลาใช้งาน',
-                text: 'เนื่องจากไม่มีการใช้งานนานเกิน 15 นาที ระบบจะพาคุณกลับหน้าแรก',
-                icon: 'warning',
-                confirmButtonColor: '#1a5276',
-                confirmButtonText: 'ตกลง'
-            }).then(() => { location.reload(); });
+            Swal.fire({ title: 'หมดเวลาใช้งาน', text: 'เนื่องจากไม่มีการใช้งานนานเกิน 15 นาที ระบบจะพาคุณกลับหน้าแรก', icon: 'warning', confirmButtonColor: '#1a5276', confirmButtonText: 'ตกลง' })
+            .then(() => { handleLogout(); });
         }, 15 * 60 * 1000); 
     }
 
-    window.onload = resetLogoutTimer;
-    window.onmousemove = resetLogoutTimer;
-    window.onkeypress = resetLogoutTimer;
-    window.ontouchstart = resetLogoutTimer;
+    window.onload = async () => {
+        await fetchData();
+        // ตรวจเช็คว่าเคย Login ค้างไว้ไหม (แก้ปัญหากดย้อนกลับแล้วเด้งออก)
+        const savedCode = sessionStorage.getItem('userCode');
+        if (savedCode) {
+            document.getElementById('secretInput').value = savedCode;
+            verifyAndSearch(true);
+        }
+        resetLogoutTimer();
+    };
+
+    window.onmousemove = resetLogoutTimer; window.onkeypress = resetLogoutTimer; window.ontouchstart = resetLogoutTimer;
 
     function togglePassword() {
         const input = document.getElementById('secretInput');
@@ -167,55 +138,24 @@
         else { input.type = "password"; eye.classList.replace('fa-eye-slash', 'fa-eye'); }
     }
 
-    async function fetchData() { 
-        try { const response = await fetch(GAS_WEB_APP_URL); allData = await response.json(); } 
-        catch (e) { console.error(e); } 
+    async function fetchData() { try { const response = await fetch(GAS_WEB_APP_URL); allData = await response.json(); } catch (e) { console.error(e); } }
+
+    function handleLogout() {
+        sessionStorage.removeItem('userCode');
+        location.reload();
     }
 
-    function verifyAndSearch() {
+    function verifyAndSearch(isAuto = false) {
         const inputCode = document.getElementById('secretInput').value.trim();
-        
-        // แจ้งเตือนกรณีลืมกรอก (แบบสวย)
-        if (inputCode.length === 0) {
-            Swal.fire({
-                title: 'กรุณากรอกรหัสผ่าน',
-                text: 'รหัสคือเลขท้ายเบอร์โทรศัพท์ 4 ตัวค่ะ',
-                icon: 'info',
-                confirmButtonColor: '#1a5276',
-                confirmButtonText: 'รับทราบ'
-            });
-            return;
-        }
-
-        // แจ้งเตือนกรณีกรอกไม่ครบ (แบบสวย)
-        if (inputCode.length < 4) {
-            Swal.fire({
-                title: 'กรุณากรอกรหัสให้ครบ',
-                text: 'กรุณาระบุให้ครบ 4 หลักค่ะ',
-                icon: 'warning',
-                confirmButtonColor: '#1a5276',
-                confirmButtonText: 'ลองอีกครั้ง'
-            });
-            return;
-        }
-
+        if (inputCode.length === 0) { if(!isAuto) Swal.fire({ title: 'กรุณากรอกรหัสผ่าน', text: 'รหัสคือเลขท้ายเบอร์โทรศัพท์ 4 ตัวค่ะ', icon: 'info', confirmButtonColor: '#1a5276' }); return; }
         filteredData = allData.filter(item => item.secretCode === inputCode).reverse();
-        
         if (filteredData.length > 0) {
+            sessionStorage.setItem('userCode', inputCode); // บันทึกรหัสไว้ชั่วคราว
             document.getElementById('loginArea').style.display = 'none';
             document.getElementById('resultSection').style.display = 'block';
             document.getElementById('displayName').innerText = filteredData[0].userName;
             currentPage = 1; displayData(); resetLogoutTimer();
-        } else { 
-            // แจ้งเตือนกรณีรหัสผิด (แบบสวย)
-            Swal.fire({
-                title: 'รหัสไม่ถูกต้อง',
-                text: 'ไม่พบข้อมูลครูที่ตรงกับรหัสนี้ กรุณาตรวจสอบอีกครั้งค่ะ',
-                icon: 'error',
-                confirmButtonColor: '#1a5276',
-                confirmButtonText: 'ตกลง'
-            });
-        }
+        } else { if(!isAuto) Swal.fire({ title: 'รหัสไม่ถูกต้อง', text: 'กรุณาตรวจสอบอีกครั้งค่ะ', icon: 'error', confirmButtonColor: '#1a5276' }); }
     }
 
     function displayData() {
@@ -227,8 +167,10 @@
         const items = filteredData.slice(start, end);
         items.forEach(item => {
             const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
-            tableBody.innerHTML += `<tr><td>${item.date}</td><td><div style="font-weight:600; color:#1e293b;">${item.title}</div></td><td class="text-center"><span class="${sClass}">${item.status}</span></td><td class="text-center">${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดู</a>` : '-'}</td></tr>`;
-            mobileCards.innerHTML += `<div class="data-card"><div class="card-date">${item.date}</div><div class="card-title">${item.title}</div><div class="card-footer"><span class="${sClass}">${item.status}</span>${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> ดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}</div></div>`;
+            // ปรับลิงก์ให้เปิดแท็บใหม่เสมอ (target="_blank" และ rel="noopener noreferrer")
+            const fileLink = item.file ? `<a href="${item.file}" target="_blank" rel="noopener noreferrer" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดู</a>` : '-';
+            tableBody.innerHTML += `<tr><td>${item.date}</td><td><div style="font-weight:600;">${item.title}</div></td><td class="text-center"><span class="${sClass}">${item.status}</span></td><td class="text-center">${fileLink}</td></tr>`;
+            mobileCards.innerHTML += `<div class="data-card"><div class="card-date">${item.date}</div><div class="card-title">${item.title}</div><div class="card-footer"><span class="${sClass}">${item.status}</span>${item.file ? `<a href="${item.file}" target="_blank" rel="noopener noreferrer" class="btn-open"><i class="fas fa-file-pdf"></i> ดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}</div></div>`;
         });
         updatePagination();
     }
@@ -239,9 +181,7 @@
         document.getElementById('prevBtn').disabled = (currentPage === 1);
         document.getElementById('nextBtn').disabled = (currentPage === total);
     }
-
     function changePage(dir) { currentPage += dir; displayData(); window.scrollTo({ top: 0, behavior: 'smooth' }); resetLogoutTimer(); }
-    fetchData();
 </script>
 </body>
 </html>
