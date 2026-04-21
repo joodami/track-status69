@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --primary-color: #1a5276;
@@ -31,7 +32,8 @@
         .pass-group { position: relative; margin-bottom: 25px; }
         .pass-input { font-size: 28px; letter-spacing: 12px; text-align: center; border-radius: 15px; border: 2px solid #edf2f7; padding: 15px; }
         .eye-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #cbd5e0; letter-spacing: normal; font-size: 20px; }
-        .btn-login { border-radius: 15px; padding: 14px; width: 100%; font-weight: 600; background: var(--primary-color); border: none; color: white; font-size: 1.1rem; }
+        .btn-login { border-radius: 15px; padding: 14px; width: 100%; font-weight: 600; background: var(--primary-color); border: none; color: white; font-size: 1.1rem; transition: 0.3s; }
+        .btn-login:hover { background: var(--accent-color); transform: translateY(-2px); }
 
         /* Result Section */
         #resultSection { display: none; padding: 20px 0; }
@@ -54,7 +56,7 @@
 
         .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
         .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
-        .btn-open { background: var(--primary-color); color: white; border-radius: 10px; font-size: 0.85rem; padding: 8px 18px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .btn-open { background: var(--primary-color); color: white; border-radius: 10px; font-size: 0.85rem; padding: 8px 18px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
 
         /* Footer */
         .site-footer { text-align: center; margin-top: 60px; padding: 30px 15px; border-top: 1px solid #e2e8f0; }
@@ -70,7 +72,6 @@
             .school-logo { height: 30px; }
             .navbar { padding: 10px; }
             .user-name { font-size: 1.1rem; }
-            /* ปรับ Footer มือถือให้เล็กลงเพื่อไม่ให้ล้น */
             .site-footer { margin-top: 40px; padding: 20px 10px; }
             .footer-main { font-size: 3.2vw; white-space: nowrap; }
             .footer-dev { font-size: 2.8vw; white-space: nowrap; }
@@ -82,7 +83,7 @@
 <nav class="navbar">
     <div class="container">
         <div class="navbar-brand">
-            <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="school-logo">
+            <img src="https://via.placeholder.com/100x100?text=LOGO" alt="Logo" class="school-logo">
             <div class="brand-container">
                 <span class="brand-main-text">ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์</span>
                 <span class="brand-sub-text">โรงเรียนพิมานพิทยาสรรค์</span>
@@ -102,7 +103,6 @@
                 <i class="fas fa-eye eye-icon" id="toggleEye" onclick="togglePassword()"></i>
             </div>
             <button class="btn btn-primary btn-login" onclick="verifyAndSearch()">ตกลง</button>
-            <div id="errorMsg" class="text-danger mt-3 small" style="display:none;">❌ รหัสไม่ถูกต้องค่ะ</div>
         </div>
     </div>
 
@@ -145,8 +145,13 @@
     function resetLogoutTimer() {
         clearTimeout(logoutTimer);
         logoutTimer = setTimeout(() => {
-            alert("เซสชันหมดอายุเนื่องจากไม่มีการใช้งานนานเกิน 15 นาที");
-            location.reload();
+            Swal.fire({
+                title: 'หมดเวลาใช้งาน',
+                text: 'เนื่องจากไม่มีการใช้งานนานเกิน 15 นาที ระบบจะพาคุณกลับหน้าแรก',
+                icon: 'warning',
+                confirmButtonColor: '#1a5276',
+                confirmButtonText: 'ตกลง'
+            }).then(() => { location.reload(); });
         }, 15 * 60 * 1000); 
     }
 
@@ -169,14 +174,48 @@
 
     function verifyAndSearch() {
         const inputCode = document.getElementById('secretInput').value.trim();
-        if (inputCode.length < 4) { alert("กรอกรหัส 4 หลักค่ะ"); return; }
+        
+        // แจ้งเตือนกรณีลืมกรอก (แบบสวย)
+        if (inputCode.length === 0) {
+            Swal.fire({
+                title: 'กรุณากรอกรหัสผ่าน',
+                text: 'รหัสคือเลขท้ายเบอร์โทรศัพท์ 4 ตัวค่ะ',
+                icon: 'info',
+                confirmButtonColor: '#1a5276',
+                confirmButtonText: 'รับทราบ'
+            });
+            return;
+        }
+
+        // แจ้งเตือนกรณีกรอกไม่ครบ (แบบสวย)
+        if (inputCode.length < 4) {
+            Swal.fire({
+                title: 'กรุณากรอกรหัสให้ครบ',
+                text: 'กรุณาระบุให้ครบ 4 หลักค่ะ',
+                icon: 'warning',
+                confirmButtonColor: '#1a5276',
+                confirmButtonText: 'ลองอีกครั้ง'
+            });
+            return;
+        }
+
         filteredData = allData.filter(item => item.secretCode === inputCode).reverse();
+        
         if (filteredData.length > 0) {
             document.getElementById('loginArea').style.display = 'none';
             document.getElementById('resultSection').style.display = 'block';
             document.getElementById('displayName').innerText = filteredData[0].userName;
             currentPage = 1; displayData(); resetLogoutTimer();
-        } else { document.getElementById('errorMsg').style.display = 'block'; }
+        } else { 
+            // แจ้งเตือนกรณีรหัสผิด (แบบสวย)
+            Swal.fire({
+                title: 'รหัสไม่ถูกต้อง',
+                text: 'ไม่พบข้อมูลครูที่ตรงกับรหัสนี้ กรุณาตรวจสอบอีกครั้งค่ะ',
+                icon: 'error',
+                confirmButtonColor: '#1a5276',
+                confirmButtonText: 'ตกลง'
+            });
+        }
     }
 
     function displayData() {
