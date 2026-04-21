@@ -16,60 +16,73 @@
 
         body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); color: #2c3e50; overflow-x: hidden; }
         
-        /* Navbar - ชื่อเต็มบรรทัดเดียว */
-        .navbar { background: white !important; border-bottom: 2px solid var(--primary-color); padding: 8px 10px; position: sticky; top: 0; z-index: 1000; }
-        .navbar-brand { color: var(--primary-color) !important; display: flex; align-items: center; gap: 8px; width: 100%; margin: 0; white-space: nowrap; overflow: hidden; }
-        .school-logo { height: 32px; width: auto; flex-shrink: 0; }
-        .brand-container { display: flex; flex-direction: column; line-height: 1.1; flex-grow: 1; min-width: 0; }
-        .brand-main-text { font-size: 1rem; font-weight: 600; color: var(--primary-color); letter-spacing: -0.2px; }
-        .brand-sub-text { font-size: 0.75rem; font-weight: 400; color: #64748b; }
+        /* Navbar - ปรับขนาด Desktop ให้ชัดเจนขึ้น */
+        .navbar { background: white !important; border-bottom: 2px solid var(--primary-color); padding: 12px 15px; position: sticky; top: 0; z-index: 1000; }
+        .navbar-brand { color: var(--primary-color) !important; display: flex; align-items: center; gap: 12px; width: 100%; margin: 0; white-space: nowrap; overflow: hidden; }
+        .school-logo { height: 45px; width: auto; flex-shrink: 0; }
+        .brand-container { display: flex; flex-direction: column; line-height: 1.2; flex-grow: 1; min-width: 0; }
+        
+        /* ขนาดฟอนต์ Desktop */
+        .brand-main-text { font-size: 1.25rem; font-weight: 600; color: var(--primary-color); letter-spacing: -0.2px; }
+        .brand-sub-text { font-size: 0.9rem; font-weight: 400; color: #64748b; }
 
         /* Login Card */
-        .login-container { max-width: 400px; margin: 30px auto; padding: 15px; }
-        .card-login { border-radius: 25px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.07); padding: 30px 20px; background: white; text-align: center; }
-        .login-visual { font-size: 50px; color: var(--primary-color); margin-bottom: 15px; }
-        .pass-group { position: relative; margin-bottom: 20px; }
-        .pass-input { font-size: 24px; letter-spacing: 12px; text-align: center; border-radius: 15px; border: 2px solid #edf2f7; padding: 12px; }
-        .eye-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #cbd5e0; letter-spacing: normal; }
-        .btn-login { border-radius: 15px; padding: 12px; width: 100%; font-weight: 600; background: var(--primary-color); border: none; color: white; }
+        .login-container { max-width: 400px; margin: 50px auto; padding: 15px; }
+        .card-login { border-radius: 25px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.07); padding: 40px 30px; background: white; text-align: center; }
+        .login-visual { font-size: 60px; color: var(--primary-color); margin-bottom: 20px; }
+        .pass-group { position: relative; margin-bottom: 25px; }
+        .pass-input { font-size: 28px; letter-spacing: 12px; text-align: center; border-radius: 15px; border: 2px solid #edf2f7; padding: 15px; }
+        .eye-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #cbd5e0; letter-spacing: normal; font-size: 20px; }
+        .btn-login { border-radius: 15px; padding: 14px; width: 100%; font-weight: 600; background: var(--primary-color); border: none; color: white; font-size: 1.1rem; }
 
         /* Result Section */
-        #resultSection { display: none; padding: 12px; }
-        .user-info-card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); position: relative; border-top: 4px solid var(--primary-color); }
-        .logout-corner { position: absolute; top: 12px; right: 12px; }
-        .user-label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 2px; }
-        .user-name { color: var(--primary-color); font-size: 1.1rem; font-weight: 600; padding-right: 35px; word-break: break-word; }
+        #resultSection { display: none; padding: 20px 0; }
+        .user-info-card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); position: relative; border-top: 5px solid var(--primary-color); }
+        .logout-corner { position: absolute; top: 20px; right: 20px; }
+        .user-label { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .user-name { color: var(--primary-color); font-size: 1.4rem; font-weight: 600; padding-right: 50px; }
 
         /* Tables & Cards */
-        .desktop-table { display: block; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .desktop-table { display: block; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .table thead { background-color: #f1f5f9; }
-        .table th { border: none; padding: 15px; font-size: 0.85rem; color: #64748b; }
-        .table td { padding: 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .table th { border: none; padding: 18px; font-size: 0.95rem; color: #64748b; font-weight: 600; }
+        .table td { padding: 18px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 1rem; }
+        
         .mobile-cards { display: none; }
-        .data-card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); position: relative; border: 1px solid #f1f5f9; }
-        .card-date { font-size: 0.7rem; color: #94a3b8; margin-bottom: 5px; }
-        .card-title { font-weight: 600; color: #1e293b; font-size: 0.95rem; line-height: 1.4; margin-bottom: 15px; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 12px; }
+        .data-card { background: white; border-radius: 18px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; }
+        .card-date { font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; }
+        .card-title { font-weight: 600; color: #1e293b; font-size: 1rem; line-height: 1.4; margin-bottom: 15px; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 15px; }
 
-        .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 600; }
-        .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 600; }
-        .btn-open { background: var(--primary-color); color: white; border-radius: 10px; font-size: 0.75rem; padding: 7px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+        .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
+        .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
+        .btn-open { background: var(--primary-color); color: white; border-radius: 10px; font-size: 0.85rem; padding: 8px 18px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .btn-open:hover { background: var(--accent-color); color: white; }
+
+        /* Footer ปรับปรุงใหม่ */
+        .site-footer { text-align: center; margin-top: 60px; padding: 30px 0; border-top: 1px solid #e2e8f0; }
+        .footer-main { font-size: 0.95rem; font-weight: 600; color: #475569; margin-bottom: 5px; }
+        .footer-dev { font-size: 0.85rem; color: #94a3b8; }
+        .footer-school { color: var(--primary-color); font-weight: 600; }
 
         @media (max-width: 768px) {
             .desktop-table { display: none; }
             .mobile-cards { display: block; }
             .brand-main-text { font-size: 3.6vw; letter-spacing: -0.5px; }
             .brand-sub-text { font-size: 2.8vw; }
-            .school-logo { height: 26px; }
+            .school-logo { height: 30px; }
+            .navbar { padding: 10px; }
+            .user-name { font-size: 1.1rem; }
+            .site-footer { margin-top: 40px; padding: 20px 10px; }
         }
     </style>
 </head>
 <body>
 
 <nav class="navbar">
-    <div class="container p-0">
+    <div class="container">
         <div class="navbar-brand">
-            <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="school-logo">
+            <img src="https://via.placeholder.com/100x100?text=LOGO" alt="Logo" class="school-logo">
             <div class="brand-container">
                 <span class="brand-main-text">ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์</span>
                 <span class="brand-sub-text">โรงเรียนพิมานพิทยาสรรค์</span>
@@ -82,8 +95,8 @@
     <div id="loginArea" class="login-container">
         <div class="card-login">
             <div class="login-visual"><i class="fas fa-unlock-alt"></i></div>
-            <h5 class="fw-bold mb-2">เข้าสู่ระบบ</h5>
-            <p class="text-muted small mb-4">ระบุเลขท้ายเบอร์โทรศัพท์ 4 ตัว</p>
+            <h5 class="fw-bold mb-2" style="font-size: 1.3rem;">เข้าสู่ระบบ</h5>
+            <p class="text-muted mb-4">ระบุเลขท้ายเบอร์โทรศัพท์ 4 ตัว</p>
             <div class="pass-group">
                 <input type="password" id="secretInput" class="form-control pass-input" maxlength="4" placeholder="****" onkeypress="if(event.keyCode==13) verifyAndSearch()">
                 <i class="fas fa-eye eye-icon" id="toggleEye" onclick="togglePassword()"></i>
@@ -96,7 +109,9 @@
     <div id="resultSection">
         <div class="user-info-card">
             <div class="logout-corner">
-                <button class="btn btn-sm btn-outline-danger border-0" onclick="location.reload()"><i class="fas fa-power-off"></i></button>
+                <button class="btn btn-outline-danger border-0" onclick="location.reload()" title="ออกจากระบบ">
+                    <i class="fas fa-power-off fa-lg"></i>
+                </button>
             </div>
             <div class="user-label">ชื่อคุณครูผู้ใช้งาน</div>
             <div id="displayName" class="user-name">กำลังโหลด...</div>
@@ -113,15 +128,18 @@
         </div>
 
         <div class="d-flex justify-content-between align-items-center mt-4 px-1">
-            <button id="prevBtn" class="btn btn-light btn-sm px-3 shadow-sm" style="border-radius:10px" onclick="changePage(-1)">ก่อนหน้า</button>
-            <span class="text-muted small">หน้า <span id="pageInfo" class="fw-bold">1 / 1</span></span>
-            <button id="nextBtn" class="btn btn-light btn-sm px-3 shadow-sm" style="border-radius:10px" onclick="changePage(1)">ถัดไป</button>
+            <button id="prevBtn" class="btn btn-light shadow-sm px-4" style="border-radius:12px" onclick="changePage(-1)">ก่อนหน้า</button>
+            <span class="text-muted">หน้า <span id="pageInfo" class="fw-bold text-dark">1 / 1</span></span>
+            <button id="nextBtn" class="btn btn-light shadow-sm px-4" style="border-radius:12px" onclick="changePage(1)">ถัดไป</button>
         </div>
     </div>
 
-    <footer class="text-center mt-5 mb-4 text-muted" style="font-size: 0.7rem; line-height: 1.5;">
-        ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์<br>
-        <span style="opacity: 0.8;">พัฒนาโดย งานสารบรรณโรงเรียน</span>
+    <footer class="site-footer">
+        <div class="footer-main">ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์</div>
+        <div class="footer-dev">
+            พัฒนาโดย <span class="footer-school">งานสารบรรณโรงเรียนพิมานพิทยาสรรค์</span>
+        </div>
+        <div class="mt-2" style="font-size: 0.75rem; color: #cbd5e0;">© 2026 All Rights Reserved</div>
     </footer>
 </div>
 
@@ -159,7 +177,7 @@
         const items = filteredData.slice(start, end);
         items.forEach(item => {
             const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
-            tableBody.innerHTML += `<tr><td style="color:#94a3b8; font-size:0.85rem; width:110px;">${item.date}</td><td><div style="font-weight:600;">${item.title}</div></td><td class="text-center"><span class="${sClass}">${item.status}</span></td><td class="text-center">${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิด</a>` : '-'}</td></tr>`;
+            tableBody.innerHTML += `<tr><td>${item.date}</td><td><div style="font-weight:600; color:#1e293b;">${item.title}</div></td><td class="text-center"><span class="${sClass}">${item.status}</span></td><td class="text-center">${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดู</a>` : '-'}</td></tr>`;
             mobileCards.innerHTML += `<div class="data-card"><div class="card-date">${item.date}</div><div class="card-title">${item.title}</div><div class="card-footer"><span class="${sClass}">${item.status}</span>${item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> ดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}</div></div>`;
         });
         updatePagination();
