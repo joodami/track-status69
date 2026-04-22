@@ -236,9 +236,19 @@ window.onload = async () => {
         } 
     }
 
-    function handleLogout() {
+function handleLogout() {
+        // 1. ลบข้อมูลการล็อกอิน
         sessionStorage.removeItem('userCode');
-        location.reload();
+        
+        // 2. ล้างค่าในช่องรหัสผ่าน
+        document.getElementById('secretInput').value = '';
+        
+        // 3. สลับหน้าจอ: ซ่อนหน้าข้อมูล แล้วโชว์หน้า Login ทันที
+        document.getElementById('resultSection').style.display = 'none';
+        document.getElementById('loginArea').style.display = 'block';
+        
+        // 4. (ทางเลือก) เลื่อนหน้าจอขึ้นบนสุดเพื่อให้เห็นฟอร์ม Login ชัดๆ
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function verifyAndSearch(isAuto = false) {
