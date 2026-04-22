@@ -189,34 +189,38 @@
 window.onload = async () => {
     const loader = document.getElementById('loadingOverlay');
     const savedCode = sessionStorage.getItem('userCode');
+    const loginArea = document.getElementById('loginArea');
 
-    // ถ้าพบว่าเคยเข้าระบบไว้แล้ว (แสดงว่าเป็นจังหวะกด Refresh) ให้โชว์ตัวหมุน
-    if (savedCode && loader) {
-        loader.style.display = 'flex';
+    // 1. ตรวจสอบเบื้องต้น: ถ้าไม่ได้ล็อกอินค้างไว้ ให้แสดงหน้า Login ทันที (ไม่ต้องรอโหลดข้อมูล)
+    if (!savedCode) {
+        loginArea.style.display = 'block';
+    } else {
+        // ถ้าล็อกอินค้างไว้ ให้แสดงตัวหมุน Loading เพื่อรอโหลดข้อมูลประวัติ
+        if (loader) loader.style.display = 'flex';
     }
 
     try {
-        await fetchData(); // ดึงข้อมูล
+        // 2. เริ่มโหลดข้อมูลจาก Google Sheets (ทำงานอยู่เบื้องหลัง)
+        await fetchData(); 
         
-        if (loader) {
-            loader.style.display = 'none'; // โหลดเสร็จแล้วปิดตัวหมุน
-        }
+        // 3. เมื่อโหลดข้อมูลเสร็จแล้ว
+        if (loader) loader.style.display = 'none';
 
         if (savedCode) {
+            // ถ้ามีรหัสเดิม ให้ทำการล็อกอินและแสดงข้อมูลทันที
             document.getElementById('secretInput').value = savedCode;
             verifyAndSearch(true);
-        } else {
-            // ถ้าไม่มีประวัติ (เปิดครั้งแรก) ให้เปิดหน้า Log in
-            document.getElementById('loginArea').style.display = 'block';
         }
+        // หมายเหตุ: ถ้าไม่มีรหัสเดิม หน้า Login ถูกเปิดรอไว้แล้วตั้งแต่ข้อ 1 ค่ะ
+        
     } catch (error) {
         console.error("เกิดข้อผิดพลาด:", error);
         if (loader) loader.style.display = 'none';
-        document.getElementById('loginArea').style.display = 'block';
+        loginArea.style.display = 'block';
     }
     resetLogoutTimer();
 };
-
+    
     window.onmousemove = resetLogoutTimer; 
     window.onkeypress = resetLogoutTimer; 
     window.ontouchstart = resetLogoutTimer;
