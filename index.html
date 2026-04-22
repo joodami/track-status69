@@ -141,7 +141,13 @@
 
 <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLuCaClwlyTiMxxYl6fXMwK9WjE7pdvC3Sf1HdlDCRlHLy4OrwYSkxE8zfaMSjCdjOoQ/exec"; 
-    let allData = []; let filteredData = []; let currentPage = 1; const rowsPerPage = 20; let logoutTimer;
+    
+    let allMembers = [];   // เก็บรายชื่อครูทุกคนจาก MemberDB
+    let allRecords = [];   // เก็บประวัติการเสนอเซ็นทั้งหมด
+    let filteredData = []; // เก็บประวัติเฉพาะของคุณครูที่ Login อยู่
+    let currentPage = 1; 
+    const rowsPerPage = 20; 
+    let logoutTimer;
 
     // ระบบ Auto Logout (10 นาที)
     function resetLogoutTimer() {
@@ -160,7 +166,6 @@
     // เมื่อโหลดหน้าเว็บ
     window.onload = async () => {
         await fetchData();
-        // เช็ค Session กันเด้งออกเวลาเปิดไฟล์
         const savedCode = sessionStorage.getItem('userCode');
         if (savedCode) {
             document.getElementById('secretInput').value = savedCode;
@@ -184,9 +189,12 @@
     async function fetchData() { 
         try { 
             const response = await fetch(GAS_WEB_APP_URL); 
-            allData = await response.json(); 
+            const data = await response.json(); 
+            // รับข้อมูลแบบแยกส่วนจากสคริปต์ตัวใหม่
+            allMembers = data.members || [];
+            allRecords = data.records || [];
         } catch (e) { 
-            console.error(e); 
+            console.error("โหลดข้อมูลไม่สำเร็จ:", e); 
         } 
     }
 
@@ -196,62 +204,69 @@
     }
 
     function verifyAndSearch(isAuto = false) {
-    const inputCode = document.getElementById('secretInput').value.trim();
-    
-    // 1. ตรวจสอบว่ากรอกครบ 5 ตัวหรือไม่
-    if (inputCode.length < 5) { 
-        if(!isAuto) Swal.fire({ 
-            title: 'กรุณากรอกรหัสผ่าน', 
-            text: 'รหัสคือเลขท้ายเบอร์โทรศัพท์ 5 ตัวค่ะ', 
-            icon: 'info', 
-            confirmButtonColor: '#1a5276' 
-        }); 
-        return; 
-    }
-
-    // 2. ค้นหาข้อมูล (ปรับให้รองรับทั้งตัวเลขและข้อความจาก Google Sheets)
-    filteredData = allData.filter(item => {
-        // แปลงค่าจากชีท (item.secretCode) และค่าที่กรอก (inputCode) ให้เป็น String และตัดช่องว่างออก
-        const codeInSheet = String(item.secretCode || "").trim();
-        const codeEntered = String(inputCode).trim();
-        return codeInSheet === codeEntered;
-    }).reverse();
-
-    // 3. ตรวจสอบผลลัพธ์
-    if (filteredData.length > 0) {
-        sessionStorage.setItem('userCode', inputCode);
-        document.getElementById('loginArea').style.display = 'none';
-        document.getElementById('resultSection').style.display = 'block';
-        document.getElementById('displayName').innerText = filteredData[0].userName;
-        currentPage = 1; 
-        displayData(); 
-        resetLogoutTimer();
-    } else { 
-        if(!isAuto) {
-            Swal.fire({ 
-                title: 'รหัสไม่ถูกต้อง', 
-                text: 'ไม่พบข้อมูลครูที่ใช้รหัสนี้ หรือกรอกรหัสผิดค่ะ กรุณาตรวจสอบอีกครั้งนะคะ', 
-                icon: 'error', 
+        const inputCode = document.getElementById('secretInput').value.trim();
+        
+        if (inputCode.length < 5) { 
+            if(!isAuto) Swal.fire({ 
+                title: 'กรุณากรอกรหัสผ่าน', 
+                text: 'รหัสคือเลขท้ายเบอร์โทรศัพท์ 5 ตัวค่ะ', 
+                icon: 'info', 
                 confirmButtonColor: '#1a5276' 
             }); 
+            return; 
+        }
+
+        // 1. ค้นหาครูในระบบ MemberDB ก่อน (เพื่อให้เข้าใช้งานได้แม้ยังไม่มีประวัติ)
+        const user = allMembers.find(m => String(m.secretCode).trim() === String(inputCode).trim());
+
+        if (user) {
+            sessionStorage.setItem('userCode', inputCode);
+            document.getElementById('loginArea').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'block';
+            document.getElementById('displayName').innerText = user.userName;
+            
+            // 2. กรองประวัติการเสนอเซ็นโดยเทียบ "ชื่อ-นามสกุล"
+            filteredData = allRecords.filter(r => r.name.trim() === user.userName.trim()).reverse();
+            
+            currentPage = 1; 
+            displayData(); 
+            resetLogoutTimer();
+        } else { 
+            if(!isAuto) {
+                Swal.fire({ 
+                    title: 'ไม่พบข้อมูล', 
+                    text: 'รหัสไม่ถูกต้อง หรือคุณครูยังไม่มีชื่อในระบบ MemberDB ค่ะ', 
+                    icon: 'error', 
+                    confirmButtonColor: '#1a5276' 
+                }); 
+            }
         }
     }
-}
 
     function displayData() {
         const tableBody = document.getElementById('tableBody');
         const mobileCards = document.getElementById('mobileCards');
         tableBody.innerHTML = ''; mobileCards.innerHTML = '';
-        const start = (currentPage - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
-        const items = filteredData.slice(start, end);
-        items.forEach(item => {
-            const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
-            // เปิดไฟล์ในแท็บใหม่เสมอเพื่อไม่ให้กระทบหน้าหลัก
-            const fileLink = item.file ? `<a href="${item.file}" target="_blank" rel="noopener noreferrer" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดู</a>` : '-';
-            tableBody.innerHTML += `<tr><td>${item.date}</td><td><div style="font-weight:600;">${item.title}</div></td><td class="text-center"><span class="${sClass}">${item.status}</span></td><td class="text-center">${fileLink}</td></tr>`;
-            mobileCards.innerHTML += `<div class="data-card"><div class="card-date">${item.date}</div><div class="card-title">${item.title}</div><div class="card-footer"><span class="${sClass}">${item.status}</span>${item.file ? `<a href="${item.file}" target="_blank" rel="noopener noreferrer" class="btn-open"><i class="fas fa-file-pdf"></i> ดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}</div></div>`;
-        });
+
+        if (filteredData.length === 0) {
+            // กรณีเข้าสู่ระบบได้ แต่ยังไม่เคยส่งเอกสารเลย
+            const noDataMsg = '<tr><td colspan="4" class="text-center py-5 text-muted">ไม่พบประวัติการเสนอเซ็นของคุณครูในระบบค่ะ</td></tr>';
+            const noDataMobile = '<div class="text-center py-4 text-muted">ไม่พบประวัติการเสนอเซ็นของคุณครูในระบบค่ะ</div>';
+            tableBody.innerHTML = noDataMsg;
+            mobileCards.innerHTML = noDataMobile;
+        } else {
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const items = filteredData.slice(start, end);
+
+            items.forEach(item => {
+                const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
+                const fileLink = item.file ? `<a href="${item.file}" target="_blank" rel="noopener noreferrer" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดู</a>` : '-';
+                
+                tableBody.innerHTML += `<tr><td>${item.date}</td><td><div style="font-weight:600;">${item.title}</div></td><td class="text-center"><span class="${sClass}">${item.status}</span></td><td class="text-center">${fileLink}</td></tr>`;
+                mobileCards.innerHTML += `<div class="data-card"><div class="card-date">${item.date}</div><div class="card-title">${item.title}</div><div class="card-footer"><span class="${sClass}">${item.status}</span>${item.file ? `<a href="${item.file}" target="_blank" rel="noopener noreferrer" class="btn-open"><i class="fas fa-file-pdf"></i> ดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}</div></div>`;
+            });
+        }
         updatePagination();
     }
 
