@@ -96,9 +96,11 @@
         <div class="card-login">
             <div class="login-visual"><i class="fas fa-unlock-alt"></i></div>
             <h5 class="fw-bold mb-2">เข้าสู่ระบบ</h5>
-            <p class="text-muted mb-4">ระบุเลขท้ายเบอร์โทรศัพท์ 4 ตัว</p>
+            <p class="text-muted mb-4">ระบุเลขท้ายเบอร์โทรศัพท์ 5 ตัว</p>
             <div class="pass-group">
-                <input type="password" id="secretInput" class="form-control pass-input" maxlength="4" placeholder="****" onkeypress="if(event.keyCode==13) verifyAndSearch()">
+                <input type="password" id="secretInput" class="form-control pass-input" 
+       maxlength="5" placeholder="*****" 
+       onkeypress="if(event.keyCode==13) verifyAndSearch()">
                 <i class="fas fa-eye eye-icon" id="toggleEye" onclick="togglePassword()"></i>
             </div>
             <button class="btn btn-primary btn-login" onclick="verifyAndSearch()">ตกลง</button>
@@ -194,11 +196,18 @@
     }
 
     function verifyAndSearch(isAuto = false) {
-        const inputCode = document.getElementById('secretInput').value.trim();
-        if (inputCode.length === 0) { 
-            if(!isAuto) Swal.fire({ title: 'กรุณากรอกรหัสผ่าน', text: 'รหัสคือเลขท้ายเบอร์โทรศัพท์ 4 ตัวค่ะ', icon: 'info', confirmButtonColor: '#1a5276' }); 
-            return; 
-        }
+    const inputCode = document.getElementById('secretInput').value.trim();
+    
+    // ปรับเงื่อนไขแจ้งเตือนถ้ากรอกไม่ครบ 5 ตัว
+    if (inputCode.length < 5) { 
+        if(!isAuto) Swal.fire({ 
+            title: 'กรุณากรอกรหัสผ่าน', 
+            text: 'รหัสคือเลขท้ายเบอร์โทรศัพท์ 5 ตัวค่ะ', 
+            icon: 'info', 
+            confirmButtonColor: '#1a5276' 
+        }); 
+        return; 
+    }
         filteredData = allData.filter(item => item.secretCode === inputCode).reverse();
         if (filteredData.length > 0) {
             sessionStorage.setItem('userCode', inputCode);
