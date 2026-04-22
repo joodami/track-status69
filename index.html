@@ -142,14 +142,22 @@
 <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLuCaClwlyTiMxxYl6fXMwK9WjE7pdvC3Sf1HdlDCRlHLy4OrwYSkxE8zfaMSjCdjOoQ/exec"; 
     
-    let allMembers = [];   // เก็บรายชื่อครูทุกคนจาก MemberDB
-    let allRecords = [];   // เก็บประวัติการเสนอเซ็นทั้งหมด
-    let filteredData = []; // เก็บประวัติเฉพาะของคุณครูที่ Login อยู่
+    let allMembers = [];   
+    let allRecords = [];   
+    let filteredData = []; 
     let currentPage = 1; 
     const rowsPerPage = 20; 
     let logoutTimer;
 
-    // ระบบ Auto Logout (10 นาที)
+    // ฟังก์ชันช่วยทำความสะอาดชื่อ (ตัดคำนำหน้า และ ลบช่องว่างทั้งหมด)
+    function cleanName(name) {
+        if (!name) return "";
+        return String(name)
+            .replace(/^(นาย|นางสาว|นาง|ว่าที่ร้อยตรี|ดร\.)/g, "") // ตัดคำนำหน้าออก
+            .replace(/\s+/g, "") // ลบช่องว่างทุกจุด (ไม่ว่าจะเคาะกี่ครั้ง)
+            .trim();
+    }
+
     function resetLogoutTimer() {
         clearTimeout(logoutTimer);
         logoutTimer = setTimeout(() => {
@@ -163,7 +171,6 @@
         }, 10 * 60 * 1000);
     }
 
-    // เมื่อโหลดหน้าเว็บ
     window.onload = async () => {
         await fetchData();
         const savedCode = sessionStorage.getItem('userCode');
@@ -174,7 +181,6 @@
         resetLogoutTimer();
     };
 
-    // ดักจับกิจกรรมเพื่อ Reset เวลา Logout
     window.onmousemove = resetLogoutTimer; 
     window.onkeypress = resetLogoutTimer; 
     window.ontouchstart = resetLogoutTimer;
@@ -190,7 +196,6 @@
         try { 
             const response = await fetch(GAS_WEB_APP_URL); 
             const data = await response.json(); 
-            // รับข้อมูลแบบแยกส่วนจากสคริปต์ตัวใหม่
             allMembers = data.members || [];
             allRecords = data.records || [];
         } catch (e) { 
@@ -216,7 +221,7 @@
             return; 
         }
 
-        // 1. ค้นหาครูในระบบ MemberDB ก่อน (เพื่อให้เข้าใช้งานได้แม้ยังไม่มีประวัติ)
+        // 1. ค้นหาครูในระบบ MemberDB
         const user = allMembers.find(m => String(m.secretCode).trim() === String(inputCode).trim());
 
         if (user) {
@@ -225,9 +230,16 @@
             document.getElementById('resultSection').style.display = 'block';
             document.getElementById('displayName').innerText = user.userName;
             
-            // 2. กรองประวัติการเสนอเซ็นโดยเทียบ "ชื่อ-นามสกุล"
-            filteredData = allRecords.filter(r => r.name.trim() === user.userName.trim()).reverse();
-            
+            // --- ส่วนที่ปรับปรุงใหม่: การกรองข้อมูลแบบยืดหยุ่น ---
+            const targetName = cleanName(user.userName); // ชื่อจากระบบที่ล็อกอินเข้ามา
+
+            filteredData = allRecords.filter(r => {
+                const recordName = cleanName(r.name); // ชื่อที่อยู่ในแต่ละแถวของชีท
+                // คืนค่าจริงถ้าชื่อที่ทำความสะอาดแล้ว "เหมือนกัน" หรือ "มีส่วนใดส่วนหนึ่งตรงกัน"
+                return recordName.includes(targetName) || targetName.includes(recordName);
+            }).reverse();
+            // ---------------------------------------------
+
             currentPage = 1; 
             displayData(); 
             resetLogoutTimer();
@@ -249,7 +261,6 @@
         tableBody.innerHTML = ''; mobileCards.innerHTML = '';
 
         if (filteredData.length === 0) {
-            // กรณีเข้าสู่ระบบได้ แต่ยังไม่เคยส่งเอกสารเลย
             const noDataMsg = '<tr><td colspan="4" class="text-center py-5 text-muted">ไม่พบประวัติการเสนอเซ็นของคุณครูในระบบค่ะ</td></tr>';
             const noDataMobile = '<div class="text-center py-4 text-muted">ไม่พบประวัติการเสนอเซ็นของคุณครูในระบบค่ะ</div>';
             tableBody.innerHTML = noDataMsg;
