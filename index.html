@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
+  <style>
         :root { --primary-color: #1a5276; --accent-color: #3498db; --bg-color: #f8fafc; }
         body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); color: #2c3e50; overflow-x: hidden; }
         
@@ -36,21 +36,30 @@
         .user-label { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
         .user-name { color: var(--primary-color); font-size: 1.4rem; font-weight: 600; padding-right: 55px; word-break: break-word; line-height: 1.3; }
 
-        /* Content Display */
+        /* Content Display (Desktop) - ปรับปรุงการจัดการคอลัมน์ */
         .desktop-table { display: block; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .table { table-layout: fixed; width: 100%; margin-bottom: 0; } /* บังคับสัดส่วนตาราง */
         .table thead { background-color: #f1f5f9; }
         .table th { border: none; padding: 18px; font-size: 0.95rem; color: #64748b; font-weight: 600; }
-        .table td { padding: 18px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 1rem; }
+        .table td { padding: 18px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 1rem; word-wrap: break-word; }
         
+        /* กำหนดความกว้างคอลัมน์แบบเจาะจง */
+        .table th:nth-child(1) { width: 130px; } /* วันที่ */
+        .table th:nth-child(2) { width: auto; }  /* รายละเอียดหนังสือ (ยืดหยุ่น) */
+        .table th:nth-child(3) { width: 140px; text-align: center; } /* สถานะ */
+        .table th:nth-child(4) { width: 140px; text-align: center; } /* เอกสาร */
+
         .mobile-cards { display: none; }
         .data-card { background: white; border-radius: 18px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; }
         .card-date { font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; }
         .card-title { font-weight: 600; color: #1e293b; font-size: 1rem; line-height: 1.4; margin-bottom: 15px; }
         .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 15px; }
 
-        .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
-        .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
-        .btn-open { background: var(--primary-color); color: white; border-radius: 10px; font-size: 0.85rem; padding: 8px 18px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        /* ปรับแต่ง Label สถานะและปุ่มไม่ให้หดตัว */
+        .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; padding: 6px 0; border-radius: 8px; font-size: 0.8rem; font-weight: 600; display: block; width: 100px; margin: 0 auto; text-align: center; }
+        .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; padding: 6px 0; border-radius: 8px; font-size: 0.8rem; font-weight: 600; display: block; width: 100px; margin: 0 auto; text-align: center; }
+        .btn-open { background: var(--primary-color); color: white; border-radius: 10px; font-size: 0.85rem; padding: 8px 15px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 100px; transition: 0.2s; }
+        .btn-open:hover { background: var(--accent-color); color: white; }
 
         /* Footer Section */
         .site-footer { text-align: center; margin-top: 60px; padding: 30px 15px; border-top: 1px solid #e2e8f0; }
@@ -67,7 +76,6 @@
             .school-logo { height: 30px; }
             .navbar { padding: 10px; }
             
-            /* แก้ไขชื่อผู้ใช้และปุ่ม Logout ในมือถือ */
             .user-info-card { padding: 18px; }
             .user-name { font-size: 1.1rem; padding-right: 45px; }
             .logout-corner { top: 15px; right: 10px; }
