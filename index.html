@@ -198,7 +198,7 @@
     function verifyAndSearch(isAuto = false) {
     const inputCode = document.getElementById('secretInput').value.trim();
     
-    // ปรับเงื่อนไขแจ้งเตือนถ้ากรอกไม่ครบ 5 ตัว
+    // 1. ตรวจสอบว่ากรอกครบ 5 ตัวหรือไม่
     if (inputCode.length < 5) { 
         if(!isAuto) Swal.fire({ 
             title: 'กรุณากรอกรหัสผ่าน', 
@@ -208,17 +208,35 @@
         }); 
         return; 
     }
-        filteredData = allData.filter(item => item.secretCode === inputCode).reverse();
-        if (filteredData.length > 0) {
-            sessionStorage.setItem('userCode', inputCode);
-            document.getElementById('loginArea').style.display = 'none';
-            document.getElementById('resultSection').style.display = 'block';
-            document.getElementById('displayName').innerText = filteredData[0].userName;
-            currentPage = 1; displayData(); resetLogoutTimer();
-        } else { 
-            if(!isAuto) Swal.fire({ title: 'รหัสไม่ถูกต้อง', text: 'กรุณาตรวจสอบอีกครั้งค่ะ', icon: 'error', confirmButtonColor: '#1a5276' }); 
+
+    // 2. ค้นหาข้อมูล (ปรับให้รองรับทั้งตัวเลขและข้อความจาก Google Sheets)
+    filteredData = allData.filter(item => {
+        // แปลงค่าจากชีท (item.secretCode) และค่าที่กรอก (inputCode) ให้เป็น String และตัดช่องว่างออก
+        const codeInSheet = String(item.secretCode || "").trim();
+        const codeEntered = String(inputCode).trim();
+        return codeInSheet === codeEntered;
+    }).reverse();
+
+    // 3. ตรวจสอบผลลัพธ์
+    if (filteredData.length > 0) {
+        sessionStorage.setItem('userCode', inputCode);
+        document.getElementById('loginArea').style.display = 'none';
+        document.getElementById('resultSection').style.display = 'block';
+        document.getElementById('displayName').innerText = filteredData[0].userName;
+        currentPage = 1; 
+        displayData(); 
+        resetLogoutTimer();
+    } else { 
+        if(!isAuto) {
+            Swal.fire({ 
+                title: 'รหัสไม่ถูกต้อง', 
+                text: 'ไม่พบข้อมูลครูที่ใช้รหัสนี้ หรือกรอกรหัสผิดค่ะ กรุณาตรวจสอบอีกครั้งนะคะ', 
+                icon: 'error', 
+                confirmButtonColor: '#1a5276' 
+            }); 
         }
     }
+}
 
     function displayData() {
         const tableBody = document.getElementById('tableBody');
