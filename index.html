@@ -2,86 +2,81 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์ - โรงเรียนพิมานพิทยาสรรค์</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ระบบติดตามสถานะ - โรงเรียนพิมานพิทยาสรรค์</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <style>
+    <style>
         :root { --primary-color: #1a5276; --accent-color: #3498db; --bg-color: #f8fafc; }
-        body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-color); color: #2c3e50; overflow-x: hidden; }
         
-        /* Navbar Section */
-        .navbar { background: white !important; border-bottom: 2px solid var(--primary-color); padding: 12px 15px; position: sticky; top: 0; z-index: 1000; }
-        .navbar-brand { color: var(--primary-color) !important; display: flex; align-items: center; gap: 12px; width: 100%; margin: 0; white-space: nowrap; overflow: hidden; }
-        .school-logo { height: 45px; width: auto; flex-shrink: 0; }
-        .brand-container { display: flex; flex-direction: column; line-height: 1.2; flex-grow: 1; min-width: 0; }
-        .brand-main-text { font-size: 1.25rem; font-weight: 600; color: var(--primary-color); letter-spacing: -0.2px; }
-        .brand-sub-text { font-size: 0.9rem; font-weight: 400; color: #64748b; }
+        body, html { 
+            height: 100%; margin: 0; padding: 0; 
+            font-family: 'Sarabun', sans-serif; 
+            background-color: var(--bg-color); 
+            color: #2c3e50; 
+            overflow: hidden; /* ล็อกหน้าจอรวมเพื่อไม่ให้สไลด์ไปมา */
+        }
 
-        /* Login Area */
-        .login-container { max-width: 400px; margin: 50px auto; padding: 15px; }
-        .card-login { border-radius: 25px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.07); padding: 40px 30px; background: white; text-align: center; }
-        .login-visual { font-size: 60px; color: var(--primary-color); margin-bottom: 20px; }
-        .pass-group { position: relative; margin-bottom: 25px; }
-        .pass-input { font-size: 28px; letter-spacing: 12px; text-align: center; border-radius: 15px; border: 2px solid #edf2f7; padding: 15px; }
-        .eye-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #cbd5e0; letter-spacing: normal; font-size: 20px; }
-        .btn-login { border-radius: 15px; padding: 14px; width: 100%; font-weight: 600; background: var(--primary-color); border: none; color: white; font-size: 1.1rem; transition: 0.3s; }
+        /* Navbar */
+        .navbar { background: white !important; border-bottom: 2px solid var(--primary-color); padding: 8px 12px; height: 55px; position: relative; z-index: 1000; }
+        .navbar-brand { display: flex; align-items: center; gap: 8px; width: 100%; margin: 0; }
+        .school-logo { height: 32px; width: auto; flex-shrink: 0; }
+        .brand-container { display: flex; flex-direction: column; line-height: 1.1; }
+        .brand-main-text { font-size: 0.95rem; font-weight: 600; color: var(--primary-color); }
+        .brand-sub-text { font-size: 0.7rem; color: #64748b; }
 
-        /* User Info Card */
-        #resultSection { display: none; padding: 20px 0; }
-        .user-info-card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); position: relative; border-top: 5px solid var(--primary-color); }
-        .logout-corner { position: absolute; top: 20px; right: 20px; }
-        .user-label { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-        .user-name { color: var(--primary-color); font-size: 1.4rem; font-weight: 600; padding-right: 55px; word-break: break-word; line-height: 1.3; }
+        /* หน้า Login: No Scroll */
+        .login-wrapper {
+            height: calc(100vh - 55px);
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center;
+            padding: 15px;
+        }
+        .card-login { 
+            width: 100%; max-width: 320px; 
+            border-radius: 20px; border: none; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06); 
+            padding: 25px 20px; background: white; text-align: center; 
+        }
+        .login-visual { font-size: 40px; color: var(--primary-color); margin-bottom: 10px; }
+        .pass-group { position: relative; margin-bottom: 15px; }
+        .pass-input { 
+            font-size: 22px; letter-spacing: 8px; text-align: center; 
+            border-radius: 12px; border: 2px solid #edf2f7; 
+            padding: 10px; background: #f8fafc;
+        }
+        .eye-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #cbd5e0; font-size: 18px; letter-spacing: normal; }
+        .btn-login { border-radius: 12px; padding: 12px; width: 100%; font-weight: 600; background: var(--primary-color); border: none; color: white; }
 
-        /* Content Display (Desktop) - ปรับปรุงการจัดการคอลัมน์ */
-        .desktop-table { display: block; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .table { table-layout: fixed; width: 100%; margin-bottom: 0; } /* บังคับสัดส่วนตาราง */
-        .table thead { background-color: #f1f5f9; }
-        .table th { border: none; padding: 18px; font-size: 0.95rem; color: #64748b; font-weight: 600; }
-        .table td { padding: 18px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 1rem; word-wrap: break-word; }
-        
-        /* กำหนดความกว้างคอลัมน์แบบเจาะจง */
-        .table th:nth-child(1) { width: 130px; } /* วันที่ */
-        .table th:nth-child(2) { width: auto; }  /* รายละเอียดหนังสือ (ยืดหยุ่น) */
-        .table th:nth-child(3) { width: 140px; text-align: center; } /* สถานะ */
-        .table th:nth-child(4) { width: 140px; text-align: center; } /* เอกสาร */
+        /* หน้าแสดงผล: ให้เลื่อน Scroll ได้ปกติ */
+        #resultSection { 
+            display: none; height: calc(100vh - 55px); 
+            overflow-y: auto; padding: 15px; 
+        }
+        .user-info-card { 
+            background: white; border-radius: 15px; padding: 15px; 
+            margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); 
+            border-top: 4px solid var(--primary-color); position: relative;
+        }
+        .user-name { color: var(--primary-color); font-size: 1.1rem; font-weight: 600; padding-right: 40px; }
+        .logout-corner { position: absolute; right: 10px; top: 10px; }
 
+        /* ตารางและ Mobile Card */
+        .desktop-table { display: block; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .table { font-size: 0.85rem; margin-bottom: 0; }
         .mobile-cards { display: none; }
-        .data-card { background: white; border-radius: 18px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; }
-        .card-date { font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; }
-        .card-title { font-weight: 600; color: #1e293b; font-size: 1rem; line-height: 1.4; margin-bottom: 15px; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 15px; }
+        .data-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 10px; border: 1px solid #f1f5f9; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .status-pending { background: #fff7ed; color: #c2410c; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .status-success { background: #f0fdf4; color: #15803d; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .btn-open { background: var(--primary-color); color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
 
-        /* ปรับแต่ง Label สถานะและปุ่มไม่ให้หดตัว */
-        .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; padding: 6px 0; border-radius: 8px; font-size: 0.8rem; font-weight: 600; display: block; width: 100px; margin: 0 auto; text-align: center; }
-        .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; padding: 6px 0; border-radius: 8px; font-size: 0.8rem; font-weight: 600; display: block; width: 100px; margin: 0 auto; text-align: center; }
-        .btn-open { background: var(--primary-color); color: white; border-radius: 10px; font-size: 0.85rem; padding: 8px 15px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 100px; transition: 0.2s; }
-        .btn-open:hover { background: var(--accent-color); color: white; }
+        .site-footer { padding: 25px 0 50px 0; text-align: center; font-size: 0.75rem; color: #94a3b8; }
 
-        /* Footer Section */
-        .site-footer { text-align: center; margin-top: 60px; padding: 30px 15px; border-top: 1px solid #e2e8f0; }
-        .footer-main { font-size: 0.95rem; font-weight: 600; color: #475569; margin-bottom: 5px; }
-        .footer-dev { font-size: 0.85rem; color: #94a3b8; }
-        .footer-school { color: var(--primary-color); font-weight: 600; }
-
-        /* Responsive Settings for Mobile */
         @media (max-width: 768px) {
             .desktop-table { display: none; }
             .mobile-cards { display: block; }
-            .brand-main-text { font-size: 3.6vw; }
-            .brand-sub-text { font-size: 2.8vw; }
-            .school-logo { height: 30px; }
-            .navbar { padding: 10px; }
-            
-            .user-info-card { padding: 18px; }
-            .user-name { font-size: 1.1rem; padding-right: 45px; }
-            .logout-corner { top: 15px; right: 10px; }
-            
-            .footer-main { font-size: 3.2vw; white-space: nowrap; }
-            .footer-dev { font-size: 2.8vw; white-space: nowrap; }
         }
     </style>
 </head>
@@ -92,263 +87,168 @@
         <div class="navbar-brand">
             <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="school-logo">
             <div class="brand-container">
-                <span class="brand-main-text">ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์</span>
-                <span class="brand-sub-text">ประจำปี 2569  โรงเรียนพิมานพิทยาสรรค์</span>
+                <span class="brand-main-text">ระบบติดตามสถานะคลังหนังสือ</span>
+                <span class="brand-sub-text">โรงเรียนพิมานพิทยาสรรค์</span>
             </div>
         </div>
     </div>
 </nav>
 
-<div class="container">
-    <div id="loginArea" class="login-container" style="display: none;">
-        <div class="card-login">
-            <div class="login-visual"><i class="fas fa-unlock-alt"></i></div>
-            <h5 class="fw-bold mb-2">เข้าสู่ระบบ</h5>
-            <p class="text-muted mb-4">ระบุเลขท้ายเบอร์โทรศัพท์ 5 ตัว</p>
-            <div class="pass-group">
-                <input type="password" id="secretInput" class="form-control pass-input" 
-       maxlength="5" placeholder="*****" 
-       onkeypress="if(event.keyCode==13) verifyAndSearch()">
-                <i class="fas fa-eye eye-icon" id="toggleEye" onclick="togglePassword()"></i>
-            </div>
-            <button class="btn btn-primary btn-login" onclick="verifyAndSearch()">ตกลง</button>
+<div id="loginArea" class="login-wrapper" style="display: none;">
+    <div class="card-login">
+        <div class="login-visual"><i class="fas fa-unlock-alt"></i></div>
+        <h6 class="fw-bold mb-1">เข้าสู่ระบบ</h6>
+        <p class="text-muted small mb-3">ระบุเลขท้ายเบอร์โทรศัพท์ 5 ตัว</p>
+        <div class="pass-group">
+            <input type="password" id="secretInput" class="form-control pass-input" maxlength="5" placeholder="*****" onkeypress="if(event.keyCode==13) verifyAndSearch()">
+            <i class="fas fa-eye eye-icon" id="toggleEye" onclick="togglePassword()"></i>
         </div>
+        <button class="btn btn-primary btn-login" onclick="verifyAndSearch()">ตกลง</button>
+    </div>
+    <div class="mt-3 text-center small text-muted">
+        <b>งานสารบรรณ</b> โรงเรียนพิมานพิทยาสรรค์<br>© 2026 Smart Office
+    </div>
+</div>
+
+<div id="resultSection">
+    <div class="user-info-card">
+        <div class="logout-corner">
+            <button class="btn btn-outline-danger border-0" onclick="handleLogout()" title="ออกจากระบบ"><i class="fas fa-power-off fa-lg"></i></button>
+        </div>
+        <div class="small text-muted text-uppercase" style="letter-spacing: 0.5px;">คุณครูผู้ใช้งาน</div>
+        <div id="displayName" class="user-name">กำลังโหลด...</div>
     </div>
 
-    <div id="resultSection">
-        <div class="user-info-card">
-            <div class="logout-corner">
-                <button class="btn btn-outline-danger border-0" onclick="handleLogout()" title="ออกจากระบบ"><i class="fas fa-power-off fa-lg"></i></button>
-            </div>
-            <div class="user-label">ชื่อคุณครูผู้ใช้งาน</div>
-            <div id="displayName" class="user-name">กำลังโหลด...</div>
-        </div>
+    <div class="mobile-cards" id="mobileCards"></div>
+    
+    <div class="desktop-table">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr><th>วันที่</th><th>รายละเอียดหนังสือ</th><th class="text-center">สถานะ</th><th class="text-center">เอกสาร</th></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
 
-        <div class="mobile-cards" id="mobileCards"></div>
-        
-        <div class="desktop-table">
-            <table class="table table-hover align-middle mb-0">
-                <thead><tr><th>วันที่</th><th>รายละเอียดหนังสือ</th><th class="text-center">สถานะ</th><th class="text-center">เอกสาร</th></tr></thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mt-4 px-1">
-            <button id="prevBtn" class="btn btn-light shadow-sm px-4" style="border-radius:12px" onclick="changePage(-1)">ก่อนหน้า</button>
-            <span class="text-muted">หน้า <span id="pageInfo" class="fw-bold text-dark">1 / 1</span></span>
-            <button id="nextBtn" class="btn btn-light shadow-sm px-4" style="border-radius:12px" onclick="changePage(1)">ถัดไป</button>
-        </div>
+    <div class="d-flex justify-content-between align-items-center mt-3 px-1">
+        <button id="prevBtn" class="btn btn-sm btn-light border shadow-sm px-3" onclick="changePage(-1)">ก่อนหน้า</button>
+        <span class="small text-muted">หน้า <span id="pageInfo" class="fw-bold text-dark">1 / 1</span></span>
+        <button id="nextBtn" class="btn btn-sm btn-light border shadow-sm px-3" onclick="changePage(1)">ถัดไป</button>
     </div>
 
     <footer class="site-footer">
-        <div class="footer-main">ระบบติดตามสถานะและคลังหนังสือเสนอเซ็นออนไลน์</div>
-        <div class="footer-dev">พัฒนาโดย <span class="footer-school">งานสารบรรณโรงเรียนพิมานพิทยาสรรค์</span></div>
-        <div class="mt-2" style="font-size: 0.75rem; color: #cbd5e0;">© 2026 All Rights Reserved</div>
+        <div>ระบบคลังหนังสือเสนอเซ็นออนไลน์ (Smart Tracking)</div>
+        <div>พัฒนาโดย งานสารบรรณโรงเรียนพิมานพิทยาสรรค์</div>
     </footer>
 </div>
 
-   <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
-    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem; color: #1a5276 !important;" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
-    <div style="margin-top: 15px; color: #1a5276; font-weight: 600;">กำลังโหลดข้อมูล...</div>
+<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+    <div class="mt-3 fw-bold" style="color:var(--primary-color)">กำลังโหลดข้อมูล...</div>
 </div>
 
 <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLuCaClwlyTiMxxYl6fXMwK9WjE7pdvC3Sf1HdlDCRlHLy4OrwYSkxE8zfaMSjCdjOoQ/exec"; 
-    
-    let allMembers = [];   
-    let allRecords = [];   
-    let filteredData = []; 
-    let currentPage = 1; 
-    const rowsPerPage = 20; 
-    let logoutTimer;
+    let allMembers = [], allRecords = [], filteredData = [], currentPage = 1, logoutTimer;
+    const rowsPerPage = 20;
 
-    // ฟังก์ชันช่วยทำความสะอาดชื่อ (ตัดคำนำหน้า และ ลบช่องว่างทั้งหมด)
     function cleanName(name) {
         if (!name) return "";
-        return String(name)
-            .replace(/^(นาย|นางสาว|นาง|ว่าที่ร้อยตรี|ดร\.)/g, "") // ตัดคำนำหน้าออก
-            .replace(/\s+/g, "") // ลบช่องว่างทุกจุด (ไม่ว่าจะเคาะกี่ครั้ง)
-            .trim();
+        return String(name).replace(/^(นาย|นางสาว|นาง|ว่าที่ร้อยตรี|ดร\.)/g, "").replace(/\s+/g, "").trim();
     }
 
+    // ระบบ Logout อัตโนมัติ (10 นาที)
     function resetLogoutTimer() {
         clearTimeout(logoutTimer);
         logoutTimer = setTimeout(() => {
-            Swal.fire({ 
-                title: 'หมดเวลาใช้งาน', 
-                text: 'เนื่องจากไม่มีการใช้งานนานเกิน 10 นาที ระบบจะพาคุณกลับหน้าแรก', 
-                icon: 'warning', 
-                confirmButtonColor: '#1a5276', 
-                confirmButtonText: 'ตกลง' 
-            }).then(() => { handleLogout(); });
+            if(sessionStorage.getItem('userCode')) {
+                Swal.fire({ title: 'หมดเวลาใช้งาน', text: 'ระบบจะพาคุณกลับหน้าแรก', icon: 'warning', confirmButtonColor: '#1a5276' })
+                .then(() => handleLogout());
+            }
         }, 10 * 60 * 1000);
     }
 
-window.onload = async () => {
-    const loader = document.getElementById('loadingOverlay');
-    const savedCode = sessionStorage.getItem('userCode');
-    const loginArea = document.getElementById('loginArea');
+    window.onload = async () => {
+        const loader = document.getElementById('loadingOverlay');
+        const savedCode = sessionStorage.getItem('userCode');
+        if (!savedCode) document.getElementById('loginArea').style.display = 'flex';
+        else loader.style.display = 'flex';
 
-    // 1. ตรวจสอบเบื้องต้น: ถ้าไม่ได้ล็อกอินค้างไว้ ให้แสดงหน้า Login ทันที (ไม่ต้องรอโหลดข้อมูล)
-    if (!savedCode) {
-        loginArea.style.display = 'block';
-    } else {
-        // ถ้าล็อกอินค้างไว้ ให้แสดงตัวหมุน Loading เพื่อรอโหลดข้อมูลประวัติ
-        if (loader) loader.style.display = 'flex';
-    }
+        try {
+            await fetchData();
+            loader.style.display = 'none';
+            if (savedCode) {
+                document.getElementById('secretInput').value = savedCode;
+                verifyAndSearch(true);
+            }
+        } catch (e) { loader.style.display = 'none'; document.getElementById('loginArea').style.display = 'flex'; }
+        resetLogoutTimer();
+    };
 
-    try {
-        // 2. เริ่มโหลดข้อมูลจาก Google Sheets (ทำงานอยู่เบื้องหลัง)
-        await fetchData(); 
-        
-        // 3. เมื่อโหลดข้อมูลเสร็จแล้ว
-        if (loader) loader.style.display = 'none';
-
-        if (savedCode) {
-            // ถ้ามีรหัสเดิม ให้ทำการล็อกอินและแสดงข้อมูลทันที
-            document.getElementById('secretInput').value = savedCode;
-            verifyAndSearch(true);
-        }
-        // หมายเหตุ: ถ้าไม่มีรหัสเดิม หน้า Login ถูกเปิดรอไว้แล้วตั้งแต่ข้อ 1 ค่ะ
-        
-    } catch (error) {
-        console.error("เกิดข้อผิดพลาด:", error);
-        if (loader) loader.style.display = 'none';
-        loginArea.style.display = 'block';
-    }
-    resetLogoutTimer();
-};
-    
-    window.onmousemove = resetLogoutTimer; 
-    window.onkeypress = resetLogoutTimer; 
+    // ตรวจจับความเคลื่อนไหวเพื่อรีเซ็ตเวลา
+    window.onmousemove = resetLogoutTimer;
     window.ontouchstart = resetLogoutTimer;
+    window.onkeypress = resetLogoutTimer;
+
+    async function fetchData() {
+        try {
+            const res = await fetch(GAS_WEB_APP_URL);
+            const data = await res.json();
+            allMembers = data.members || [];
+            allRecords = data.records || [];
+        } catch (e) { console.error("Data Load Error:", e); }
+    }
 
     function togglePassword() {
-        const input = document.getElementById('secretInput');
-        const eye = document.getElementById('toggleEye');
+        const input = document.getElementById('secretInput'), eye = document.getElementById('toggleEye');
         if (input.type === "password") { input.type = "text"; eye.classList.replace('fa-eye', 'fa-eye-slash'); }
         else { input.type = "password"; eye.classList.replace('fa-eye-slash', 'fa-eye'); }
     }
 
-    async function fetchData() { 
-        try { 
-            const response = await fetch(GAS_WEB_APP_URL); 
-            const data = await response.json(); 
-            allMembers = data.members || [];
-            allRecords = data.records || [];
-        } catch (e) { 
-            console.error("โหลดข้อมูลไม่สำเร็จ:", e); 
-        } 
-    }
-
-function handleLogout() {
-        // 1. ลบข้อมูลการล็อกอิน
-        sessionStorage.removeItem('userCode');
-        
-        // 2. ล้างค่าในช่องรหัสผ่าน
-        document.getElementById('secretInput').value = '';
-        
-        // 3. สลับหน้าจอ: ซ่อนหน้าข้อมูล แล้วโชว์หน้า Login ทันที
-        document.getElementById('resultSection').style.display = 'none';
-        document.getElementById('loginArea').style.display = 'block';
-        
-        // 4. (ทางเลือก) เลื่อนหน้าจอขึ้นบนสุดเพื่อให้เห็นฟอร์ม Login ชัดๆ
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
     function verifyAndSearch(isAuto = false) {
         const inputCode = document.getElementById('secretInput').value.trim();
-        
-        if (inputCode.length < 5) { 
-            if(!isAuto) Swal.fire({ 
-                title: 'กรุณากรอกรหัสผ่าน', 
-                text: 'รหัสคือเลขท้ายเบอร์โทรศัพท์ 5 ตัวค่ะ', 
-                icon: 'info', 
-                confirmButtonColor: '#1a5276' 
-            }); 
-            return; 
-        }
-
-        // 1. ค้นหาครูในระบบ MemberDB
-        const user = allMembers.find(m => String(m.secretCode).trim() === String(inputCode).trim());
+        const user = allMembers.find(m => String(m.secretCode).trim() === inputCode);
 
         if (user) {
             sessionStorage.setItem('userCode', inputCode);
             document.getElementById('loginArea').style.display = 'none';
             document.getElementById('resultSection').style.display = 'block';
             document.getElementById('displayName').innerText = user.userName;
-            
-            // --- ส่วนที่ปรับปรุงใหม่: การกรองข้อมูลแบบยืดหยุ่น ---
-            const targetName = cleanName(user.userName); // ชื่อจากระบบที่ล็อกอินเข้ามา
-
+            const targetName = cleanName(user.userName);
             filteredData = allRecords.filter(r => {
-                const recordName = cleanName(r.name); // ชื่อที่อยู่ในแต่ละแถวของชีท
-                // คืนค่าจริงถ้าชื่อที่ทำความสะอาดแล้ว "เหมือนกัน" หรือ "มีส่วนใดส่วนหนึ่งตรงกัน"
-                return recordName.includes(targetName) || targetName.includes(recordName);
+                const rName = cleanName(r.name);
+                return rName.includes(targetName) || targetName.includes(rName);
             }).reverse();
-            // ---------------------------------------------
-
-            currentPage = 1; 
-            displayData(); 
-            resetLogoutTimer();
-        } else { 
-            if(!isAuto) {
-                Swal.fire({ 
-                    title: 'ไม่พบข้อมูล', 
-                    text: 'รหัสไม่ถูกต้อง หรือคุณครูยังไม่มีชื่อในระบบ MemberDB ค่ะ', 
-                    icon: 'error', 
-                    confirmButtonColor: '#1a5276' 
-                }); 
-            }
+            currentPage = 1; displayData();
+        } else if (!isAuto) {
+            Swal.fire({ title: 'ไม่พบข้อมูล', text: 'รหัสไม่ถูกต้อง หรือไม่มีชื่อในระบบค่ะ', icon: 'error', confirmButtonColor: '#1a5276' });
         }
     }
 
-function displayData() {
-        const tableBody = document.getElementById('tableBody');
-        const mobileCards = document.getElementById('mobileCards');
+    function displayData() {
+        const tableBody = document.getElementById('tableBody'), mobileCards = document.getElementById('mobileCards');
         tableBody.innerHTML = ''; mobileCards.innerHTML = '';
+        const start = (currentPage - 1) * rowsPerPage, end = start + rowsPerPage;
+        const items = filteredData.slice(start, end);
 
-        if (filteredData.length === 0) {
-            const noDataMsg = '<tr><td colspan="4" class="text-center py-5 text-muted">ไม่พบประวัติการเสนอเซ็นของคุณครูในระบบค่ะ</td></tr>';
-            const noDataMobile = '<div class="text-center py-4 text-muted">ไม่พบประวัติการเสนอเซ็นของคุณครูในระบบค่ะ</div>';
-            tableBody.innerHTML = noDataMsg;
-            mobileCards.innerHTML = noDataMobile;
+        if (items.length === 0) {
+            const msg = '<div class="text-center py-5 text-muted">ไม่พบประวัติการเสนอเซ็นของคุณครูค่ะ</div>';
+            tableBody.innerHTML = `<tr><td colspan="4">${msg}</td></tr>`;
+            mobileCards.innerHTML = msg;
         } else {
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
-            const items = filteredData.slice(start, end);
-
             items.forEach(item => {
                 const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
-                const fileLink = item.file ? `<a href="${item.file}" target="_blank" rel="noopener noreferrer" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดู</a>` : '-';
+                const link = item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดู</a>` : '-';
                 
-                // ปรับปรุงส่วนการแสดงผลในตาราง (Desktop)
-                tableBody.innerHTML += `
-                    <tr>
-                        <td>${item.date}</td>
-                        <td style="text-align: left;">
-                            <div style="font-weight:600; line-height: 1.5; color: #1e293b;">${item.title}</div>
-                        </td>
-                        <td class="text-center">
-                            <span class="${sClass}">${item.status}</span>
-                        </td>
-                        <td class="text-center">
-                            ${fileLink}
-                        </td>
-                    </tr>`;
-
-                // การแสดงผลแบบ Card (Mobile)
-                mobileCards.innerHTML += `
-                    <div class="data-card">
-                        <div class="card-date">${item.date}</div>
-                        <div class="card-title">${item.title}</div>
-                        <div class="card-footer">
-                            <span class="${sClass}">${item.status}</span>
-                            ${item.file ? `<a href="${item.file}" target="_blank" rel="noopener noreferrer" class="btn-open"><i class="fas fa-file-pdf"></i> ดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>'}
-                        </div>
-                    </div>`;
+                tableBody.innerHTML += `<tr><td>${item.date}</td><td class="fw-semibold">${item.title}</td><td class="text-center"><span class="${sClass}">${item.status}</span></td><td class="text-center">${link}</td></tr>`;
+                
+                mobileCards.innerHTML += `<div class="data-card">
+                    <div class="small text-muted mb-1">${item.date}</div>
+                    <div class="fw-bold mb-3" style="line-height:1.4">${item.title}</div>
+                    <div class="d-flex justify-content-between align-items-center pt-2" style="border-top:1px dashed #eee">
+                        <span class="${sClass}">${item.status}</span>${link}
+                    </div>
+                </div>`;
             });
         }
         updatePagination();
@@ -357,15 +257,19 @@ function displayData() {
     function updatePagination() {
         const total = Math.ceil(filteredData.length / rowsPerPage) || 1;
         document.getElementById('pageInfo').innerText = `${currentPage} / ${total}`;
-        document.getElementById('prevBtn').disabled = (currentPage === 1);
-        document.getElementById('nextBtn').disabled = (currentPage === total);
+        document.getElementById('prevBtn').disabled = currentPage === 1;
+        document.getElementById('nextBtn').disabled = currentPage === total;
     }
-    
+
     function changePage(dir) { 
         currentPage += dir; 
         displayData(); 
-        window.scrollTo({ top: 0, behavior: 'smooth' }); 
-        resetLogoutTimer(); 
+        document.getElementById('resultSection').scrollTo({ top: 0, behavior: 'smooth' }); 
+    }
+
+    function handleLogout() { 
+        sessionStorage.removeItem('userCode'); 
+        location.reload(); 
     }
 </script>
 </body>
