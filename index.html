@@ -147,6 +147,13 @@
     </footer>
 </div>
 
+    <div id="loadingOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem; color: #1a5276 !important;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <div style="margin-top: 15px; color: #1a5276; font-weight: 600;">กำลังโหลดข้อมูล...</div>
+</div>
+
 <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwLuCaClwlyTiMxxYl6fXMwK9WjE7pdvC3Sf1HdlDCRlHLy4OrwYSkxE8zfaMSjCdjOoQ/exec"; 
     
@@ -180,19 +187,32 @@
     }
 
 window.onload = async () => {
+    try {
+        // 1. ดึงข้อมูลจาก Google Sheets (จังหวะนี้คนใช้งานจะเห็นตัวหมุน)
         await fetchData();
-        const savedCode = sessionStorage.getItem('userCode');
         
+        // 2. เมื่อโหลดข้อมูลเสร็จแล้ว สั่งซ่อนหน้าจอ Loading ทันที
+        const loader = document.getElementById('loadingOverlay');
+        if (loader) {
+            loader.style.display = 'none'; 
+        }
+
+        // 3. เริ่มกระบวนการเช็คสิทธิ์ (ถ้ามีรหัสเดิมจะเข้าหน้าผู้ใช้ ถ้าไม่มีจะเปิดหน้า Login)
+        const savedCode = sessionStorage.getItem('userCode');
         if (savedCode) {
-            // ถ้ามีประวัติการเข้าสู่ระบบ
             document.getElementById('secretInput').value = savedCode;
-            verifyAndSearch(true);
+            verifyAndSearch(true); // เข้าระบบอัตโนมัติ (ข้อมูลจะแสดงทันที)
         } else {
-            // ถ้าไม่มีประวัติ (เป็นผู้ใช้ใหม่) ให้เปิดหน้า Log in ขึ้นมา
             document.getElementById('loginArea').style.display = 'block';
         }
-        resetLogoutTimer();
-    };
+    } catch (error) {
+        console.error("เกิดข้อผิดพลาด:", error);
+        // หากโหลดไม่สำเร็จ ควรปิด Loading เพื่อให้ผู้ใช้เห็นหน้าเว็บ
+        document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('loginArea').style.display = 'block';
+    }
+    resetLogoutTimer();
+};
 
     window.onmousemove = resetLogoutTimer; 
     window.onkeypress = resetLogoutTimer; 
