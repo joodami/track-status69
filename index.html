@@ -100,7 +100,7 @@
 </nav>
 
 <div class="container">
-    <div id="loginArea" class="login-container">
+    <div id="loginArea" class="login-container" style="display: none;">
         <div class="card-login">
             <div class="login-visual"><i class="fas fa-unlock-alt"></i></div>
             <h5 class="fw-bold mb-2">เข้าสู่ระบบ</h5>
@@ -179,12 +179,17 @@
         }, 10 * 60 * 1000);
     }
 
-    window.onload = async () => {
+window.onload = async () => {
         await fetchData();
         const savedCode = sessionStorage.getItem('userCode');
+        
         if (savedCode) {
+            // ถ้ามีประวัติการเข้าสู่ระบบ
             document.getElementById('secretInput').value = savedCode;
             verifyAndSearch(true);
+        } else {
+            // ถ้าไม่มีประวัติ (เป็นผู้ใช้ใหม่) ให้เปิดหน้า Log in ขึ้นมา
+            document.getElementById('loginArea').style.display = 'block';
         }
         resetLogoutTimer();
     };
