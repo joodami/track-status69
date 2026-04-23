@@ -53,7 +53,7 @@
 
 <div id="loginArea" class="login-wrapper">
     <div class="card-login">
-        <div class="login-visual"><i class="fas fa-fingerprint"></i></div>
+        <div class="login-visual"><i class="fas fa-shield-check"></i></div>
         <h5 class="fw-bold mb-2">ตรวจสอบสถานะ</h5>
         <p class="text-muted small mb-4">ระบุเลขท้ายเบอร์โทรศัพท์ 5 ตัวของคุณครู</p>
         <div class="position-relative mb-2">
@@ -173,11 +173,6 @@
     // ฟังก์ชัน Logout แบบรวดเร็ว (ไม่มี Loading)
     function handleLogout() { 
         sessionStorage.removeItem('userCode'); 
-        // สั่ง Reset การแสดงผลทันที และล้างค่าค้างในช่อง Input
-        document.getElementById('secretInput').value = '';
-        document.getElementById('resultSection').style.display = 'none';
-        document.getElementById('loginArea').style.display = 'flex';
-        // หรือใช้ location.reload() เพื่อความชัวร์ 100% ว่าไม่มีข้อมูลค้าง
         location.reload(); 
     }
 </script>
