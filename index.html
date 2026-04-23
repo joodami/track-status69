@@ -11,118 +11,34 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
-        :root { 
-            --primary: #1a5276; 
-            --accent: #2980b9; 
-            --bg: #f8fafc; 
-            --main-gradient: linear-gradient(135deg, #1a5276, #2980b9);
-        }
-        
-        body { 
-            font-family: 'Prompt', sans-serif; 
-            background-color: var(--bg); 
-            color: #2c3e50; 
-            margin: 0; padding: 0;
-            min-height: 100vh;
-        }
+        :root { --primary: #1a5276; --accent: #2980b9; --bg: #f8fafc; --main-gradient: linear-gradient(135deg, #1a5276, #2980b9); }
+        body { font-family: 'Prompt', sans-serif; background-color: var(--bg); color: #2c3e50; margin: 0; padding: 0; min-height: 100vh; }
 
         /* --- Header --- */
-        .app-header {
-            background: #ffffff;
-            text-align: center;
-            border-bottom: 4px solid var(--primary);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            padding: 15px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .school-logo { height: 50px; transition: 0.3s; }
+        .app-header { background: #ffffff; text-align: center; border-bottom: 4px solid var(--primary); box-shadow: 0 4px 8px rgba(0,0,0,0.05); padding: 15px 20px; position: sticky; top: 0; z-index: 1000; }
+        .school-logo { height: 50px; }
         .app-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin: 5px 0 0; }
         .app-subtitle { font-size: 0.85rem; color: #64748b; font-weight: 600; margin: 0; }
 
-        @media (max-width: 768px) {
-            .school-logo { height: 40px; }
-            .app-title { font-size: 1.2rem; }
-            .app-subtitle { font-size: 0.75rem; }
-            .app-header { padding: 10px; }
-        }
+        @media (max-width: 768px) { .school-logo { height: 40px; } .app-title { font-size: 1.2rem; } .app-header { padding: 10px; } }
 
         /* --- Login Section --- */
-        .login-wrapper {
-            min-height: 70vh;
-            display: flex; flex-direction: column; 
-            justify-content: center; align-items: center;
-            padding: 20px;
-        }
-        .card-login { 
-            width: 100%; max-width: 350px; 
-            border-radius: 24px; border: none; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
-            padding: 35px 25px; background: white; text-align: center; 
-        }
-        .login-visual { 
-            font-size: 60px; 
-            background: var(--main-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 15px; 
-        }
-        .pass-input { 
-            font-size: 24px; letter-spacing: 8px; text-align: center; 
-            border-radius: 15px; border: 2px solid #edf2f7; 
-            padding: 12px; background: #f8fafc; font-weight: 700;
-            transition: 0.3s;
-        }
-        .pass-input:focus { border-color: var(--accent); box-shadow: none; background: white; }
-        .btn-login { 
-            border-radius: 15px; padding: 14px; width: 100%; font-weight: 600; 
-            background: var(--primary); border: none; color: white;
-            margin-top: 15px;
-        }
+        .login-wrapper { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        .card-login { width: 100%; max-width: 350px; border-radius: 24px; border: none; box-shadow: 0 20px 40px rgba(0,0,0,0.1); padding: 35px 25px; background: white; text-align: center; }
+        .login-visual { font-size: 60px; background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
+        .pass-input { font-size: 24px; letter-spacing: 8px; text-align: center; border-radius: 15px; border: 2px solid #edf2f7; padding: 12px; background: #f8fafc; font-weight: 700; }
+        .btn-login { border-radius: 15px; padding: 14px; width: 100%; font-weight: 600; background: var(--primary); border: none; color: white; margin-top: 15px; }
 
         /* --- Result Section --- */
-        #resultSection { padding: 20px 15px; max-width: 1000px; margin: 0 auto; }
+        #resultSection { padding: 20px 15px; max-width: 1000px; margin: 0 auto; display: none; }
+        .user-info-card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 8px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
         
-        .user-info-card { 
-            background: white; border-radius: 20px; padding: 20px; 
-            margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-            border-left: 8px solid var(--primary); display: flex;
-            justify-content: space-between; align-items: center;
-        }
-        .user-name { color: var(--primary); font-size: 1.2rem; font-weight: 700; }
-
-        /* Status & Badges */
-        .status-badge {
-            padding: 6px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 700;
-            display: inline-block;
-        }
+        .status-badge { padding: 6px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
         .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
         .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
         
-        /* Mobile Cards */
-        .mobile-item-card {
-            background: white; border-radius: 20px; padding: 18px;
-            margin-bottom: 15px; border: 1px solid #f1f5f9;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            transition: 0.3s;
-        }
-        .mobile-item-card:active { transform: scale(0.98); }
-        .item-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin: 10px 0; line-height: 1.5; }
-        
-        .btn-open { 
-            background: var(--main-gradient); color: white !important; padding: 10px 20px; 
-            border-radius: 12px; font-size: 0.85rem; text-decoration: none; 
-            display: inline-flex; align-items: center; gap: 8px; font-weight: 600; width: 100%;
-            justify-content: center;
-        }
-
-        /* Pagination Custom */
-        .pagination-area {
-            background: white; padding: 10px; border-radius: 50px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin: 20px 0;
-        }
+        .mobile-item-card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #f1f5f9; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .btn-open { background: var(--main-gradient); color: white !important; padding: 10px 20px; border-radius: 12px; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; width: 100%; justify-content: center; }
 
         .site-footer { padding: 40px 0; text-align: center; font-size: 0.8rem; color: #94a3b8; }
     </style>
@@ -145,16 +61,13 @@
         </div>
         <button class="btn btn-login" onclick="verifyAndSearch()">เข้าสู่ระบบ</button>
     </div>
-    <div class="mt-4 text-center small text-muted">
-        <b>งานสารบรรณ</b> โรงเรียนพิมานพิทยาสรรค์<br>© 2026 PS Sarabun
-    </div>
 </div>
 
-<div id="resultSection" style="display: none;">
+<div id="resultSection">
     <div class="user-info-card">
         <div>
-            <div class="small text-muted text-uppercase mb-1" style="letter-spacing: 1px; font-size: 0.7rem;">คุณครูผู้ใช้งาน</div>
-            <div id="displayName" class="user-name">กำลังโหลด...</div>
+            <div class="small text-muted text-uppercase mb-1" style="font-size: 0.7rem;">คุณครูผู้ใช้งาน</div>
+            <div id="displayName" class="fw-bold text-primary" style="font-size: 1.2rem;">กำลังโหลด...</div>
         </div>
         <button class="btn btn-light rounded-circle shadow-sm" onclick="handleLogout()" style="width: 45px; height: 45px;">
             <i class="fas fa-power-off text-danger"></i>
@@ -166,32 +79,24 @@
     <div class="desktop-table d-none d-md-block card border-0 shadow-sm overflow-hidden" style="border-radius: 20px;">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
-                <tr>
-                    <th class="ps-4" width="15%">วันที่เสนอ</th>
-                    <th width="50%">รายการหนังสือ</th>
-                    <th width="15%" class="text-center">สถานะ</th>
-                    <th width="20%" class="text-center pe-4">การจัดการ</th>
-                </tr>
+                <tr><th class="ps-4">วันที่</th><th>รายการหนังสือ</th><th class="text-center">สถานะ</th><th class="text-center pe-4">การจัดการ</th></tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
 
-    <div class="pagination-area d-flex justify-content-between align-items-center mt-4 mx-auto" style="max-width: 400px;">
-        <button id="prevBtn" class="btn btn-light rounded-circle" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i></button>
-        <span class="small fw-bold">หน้า <span id="pageInfo" class="text-primary">1 / 1</span></span>
-        <button id="nextBtn" class="btn btn-light rounded-circle" onclick="changePage(1)"><i class="fas fa-chevron-right"></i></button>
+    <div class="d-flex justify-content-between align-items-center mt-4 mx-auto" style="max-width: 300px;">
+        <button id="prevBtn" class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="changePage(-1)">ก่อนหน้า</button>
+        <span class="small fw-bold"><span id="pageInfo">1 / 1</span></span>
+        <button id="nextBtn" class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="changePage(1)">ถัดไป</button>
     </div>
 
-    <footer class="site-footer">
-        <div>พัฒนาโดย งานสารบรรณโรงเรียนพิมานพิทยาสรรค์</div>
-        <div class="fw-bold mt-1 text-primary">© 2026 PS Sarabun</div>
-    </footer>
+    <footer class="site-footer"><div>© 2026 PS Sarabun | งานสารบรรณโรงเรียนพิมานพิทยาสรรค์</div></footer>
 </div>
 
-<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); flex-direction: column; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(8px);">
-    <div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem; border-width: 6px;"></div>
-    <div class="mt-3 fw-bold text-primary">กำลังโหลดข้อมูล...</div>
+<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); flex-direction: column; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(5px);">
+    <div class="spinner-border text-primary"></div>
+    <div class="mt-2 fw-bold text-primary">กำลังโหลดข้อมูล...</div>
 </div>
 
 <script>
@@ -199,35 +104,28 @@
     let allMembers = [], allRecords = [], filteredData = [], currentPage = 1;
     const rowsPerPage = 10;
 
-    function cleanName(name) {
-        if (!name) return "";
-        return String(name).replace(/^(นาย|นางสาว|นาง|ว่าที่ร้อยตรี|ดร\.)/g, "").replace(/\s+/g, "").trim();
-    }
-
+    // โหลดข้อมูลแบบ Background
     window.onload = async () => {
-        const loader = document.getElementById('loadingOverlay');
         const savedCode = sessionStorage.getItem('userCode');
         
-        loader.style.display = 'flex';
         try {
             const res = await fetch(GAS_WEB_APP_URL);
             const data = await res.json();
             allMembers = data.members || [];
             allRecords = data.records || [];
-            loader.style.display = 'none';
             
+            // ถ้าเคย Login ไว้แล้ว ให้สลับหน้าอัตโนมัติ
             if (savedCode) {
                 document.getElementById('secretInput').value = savedCode;
                 verifyAndSearch(true);
             }
-        } catch (e) { 
-            loader.style.display = 'none'; 
-            Swal.fire('ข้อผิดพลาด', 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้', 'error');
-        }
+        } catch (e) { console.error("Data load failed"); }
     };
 
     function verifyAndSearch(isAuto = false) {
         const inputCode = document.getElementById('secretInput').value.trim();
+        if (!inputCode) return;
+
         const user = allMembers.find(m => String(m.secretCode).trim() === inputCode);
 
         if (user) {
@@ -236,66 +134,52 @@
             document.getElementById('resultSection').style.display = 'block';
             document.getElementById('displayName').innerText = user.userName;
             
-            const targetName = cleanName(user.userName);
+            const tName = user.userName.replace(/^(นาย|นางสาว|นาง|ว่าที่ร้อยตรี|ดร\.)/g, "").replace(/\s+/g, "").trim();
             filteredData = allRecords.filter(r => {
-                const rName = cleanName(r.name);
-                return rName.includes(targetName) || targetName.includes(rName);
+                const rName = r.name.replace(/^(นาย|นางสาว|นาง|ว่าที่ร้อยตรี|ดร\.)/g, "").replace(/\s+/g, "").trim();
+                return rName.includes(tName) || tName.includes(rName);
             }).reverse();
             
             currentPage = 1; 
             displayData();
         } else if (!isAuto) {
-            Swal.fire({ title: 'รหัสไม่ถูกต้อง', text: 'ไม่พบข้อมูลคุณครูในระบบค่ะ', icon: 'error', confirmButtonColor: '#1a5276' });
+            Swal.fire('ไม่พบข้อมูล', 'กรุณาตรวจสอบเลขท้ายเบอร์โทรศัพท์อีกครั้งค่ะ', 'error');
         }
     }
 
     function displayData() {
         const tableBody = document.getElementById('tableBody'), mobileCards = document.getElementById('mobileCards');
         tableBody.innerHTML = ''; mobileCards.innerHTML = '';
-        const start = (currentPage - 1) * rowsPerPage, end = start + rowsPerPage;
-        const items = filteredData.slice(start, end);
+        const items = filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
-        if (items.length === 0) {
-            const msg = '<div class="text-center py-5 text-muted"><i class="fas fa-folder-open fa-3x mb-3"></i><br>ไม่พบประวัติการเสนอเซ็น</div>';
-            tableBody.innerHTML = `<tr><td colspan="4">${msg}</td></tr>`;
-            mobileCards.innerHTML = msg;
-        } else {
-            items.forEach(item => {
-                const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
-                const link = item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<button class="btn btn-light btn-sm w-100 fw-bold" disabled>ไม่มีไฟล์</button>';
-                
-                // ตาราง Desktop
-                tableBody.innerHTML += `<tr><td class="ps-4">${item.date}</td><td class="fw-bold">${item.title}</td><td class="text-center"><span class="status-badge ${sClass}">${item.status}</span></td><td class="text-center pe-4">${link}</td></tr>`;
-                
-                // การ์ด Mobile
-                mobileCards.innerHTML += `
-                <div class="mobile-item-card shadow-sm">
-                    <div class="d-flex justify-content-between align-items-start border-bottom pb-2">
-                        <span class="small text-muted"><i class="far fa-calendar-alt me-1"></i> ${item.date}</span>
-                        <span class="status-badge ${sClass}">${item.status}</span>
-                    </div>
-                    <div class="item-title">${item.title}</div>
-                    <div class="mt-2">${link}</div>
-                </div>`;
-            });
-        }
-        updatePagination();
+        items.forEach(item => {
+            const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
+            const link = item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<button class="btn btn-light btn-sm w-100" disabled>ไม่มีไฟล์</button>';
+            
+            tableBody.innerHTML += `<tr><td class="ps-4">${item.date}</td><td class="fw-bold">${item.title}</td><td class="text-center"><span class="status-badge ${sClass}">${item.status}</span></td><td class="text-center pe-4">${link}</td></tr>`;
+            mobileCards.innerHTML += `
+            <div class="mobile-item-card shadow-sm">
+                <div class="d-flex justify-content-between mb-2"><span class="small text-muted">${item.date}</span><span class="status-badge ${sClass}">${item.status}</span></div>
+                <div class="fw-bold mb-3">${item.title}</div>
+                <div>${link}</div>
+            </div>`;
+        });
+        
+        document.getElementById('pageInfo').innerText = `${currentPage} / ${Math.ceil(filteredData.length / rowsPerPage) || 1}`;
     }
 
-    function updatePagination() {
-        const total = Math.ceil(filteredData.length / rowsPerPage) || 1;
-        document.getElementById('pageInfo').innerText = `${currentPage} / ${total}`;
-        document.getElementById('prevBtn').disabled = currentPage === 1;
-        document.getElementById('nextBtn').disabled = currentPage === total;
-    }
+    function changePage(dir) { currentPage += dir; displayData(); window.scrollTo(0,0); }
 
-    function changePage(dir) { 
-        currentPage += dir; 
-        displayData(); 
-        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    // ฟังก์ชัน Logout แบบรวดเร็ว (ไม่มี Loading)
+    function handleLogout() { 
+        sessionStorage.removeItem('userCode'); 
+        // สั่ง Reset การแสดงผลทันที และล้างค่าค้างในช่อง Input
+        document.getElementById('secretInput').value = '';
+        document.getElementById('resultSection').style.display = 'none';
+        document.getElementById('loginArea').style.display = 'flex';
+        // หรือใช้ location.reload() เพื่อความชัวร์ 100% ว่าไม่มีข้อมูลค้าง
+        location.reload(); 
     }
-
-    function handleLogout() { sessionStorage.removeItem('userCode'); location.reload(); }
 </script>
 </body>
 </html>
