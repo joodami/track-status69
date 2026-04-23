@@ -30,13 +30,34 @@
         .btn-login { border-radius: 15px; padding: 14px; width: 100%; font-weight: 600; background: var(--primary); border: none; color: white; margin-top: 15px; }
 
         /* --- Result Section --- */
-        #resultSection { padding: 20px 15px; max-width: 1000px; margin: 0 auto; display: none; }
+        #resultSection { padding: 20px 15px; max-width: 1100px; margin: 0 auto; display: none; }
         .user-info-card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 8px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
         
-        .status-badge { padding: 6px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
+        .status-badge { padding: 6px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; display: inline-block; white-space: nowrap; }
         .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
         .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
         
+        /* ปรับแต่งตารางในคอมพิวเตอร์เพื่อแก้ปัญหาข้อความบีบ */
+        .desktop-table table { width: 100%; table-layout: auto; }
+        .col-date { width: 120px; white-space: nowrap; }
+        .col-status { width: 140px; text-align: center; }
+        .col-action { width: 160px; text-align: center; }
+        
+        /* ห้ามข้อความในปุ่มและสถานะขึ้นบรรทัดใหม่ */
+        .btn-open-desktop { 
+            background: var(--main-gradient); 
+            color: white !important; 
+            padding: 6px 12px; 
+            border-radius: 8px; 
+            font-size: 0.8rem; 
+            text-decoration: none; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 5px; 
+            font-weight: 600; 
+            white-space: nowrap; 
+        }
+
         .mobile-item-card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #f1f5f9; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .btn-open { background: var(--main-gradient); color: white !important; padding: 10px 20px; border-radius: 12px; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; width: 100%; justify-content: center; }
 
@@ -79,7 +100,12 @@
     <div class="desktop-table d-none d-md-block card border-0 shadow-sm overflow-hidden" style="border-radius: 20px;">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
-                <tr><th class="ps-4">วันที่</th><th>รายการหนังสือ</th><th class="text-center">สถานะ</th><th class="text-center pe-4">การจัดการ</th></tr>
+                <tr>
+                    <th class="ps-4 col-date">วันที่</th>
+                    <th>รายการหนังสือ</th>
+                    <th class="col-status">สถานะ</th>
+                    <th class="pe-4 col-action">การจัดการ</th>
+                </tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
@@ -104,17 +130,13 @@
     let allMembers = [], allRecords = [], filteredData = [], currentPage = 1;
     const rowsPerPage = 10;
 
-    // โหลดข้อมูลแบบ Background
     window.onload = async () => {
         const savedCode = sessionStorage.getItem('userCode');
-        
         try {
             const res = await fetch(GAS_WEB_APP_URL);
             const data = await res.json();
             allMembers = data.members || [];
             allRecords = data.records || [];
-            
-            // ถ้าเคย Login ไว้แล้ว ให้สลับหน้าอัตโนมัติ
             if (savedCode) {
                 document.getElementById('secretInput').value = savedCode;
                 verifyAndSearch(true);
@@ -125,21 +147,17 @@
     function verifyAndSearch(isAuto = false) {
         const inputCode = document.getElementById('secretInput').value.trim();
         if (!inputCode) return;
-
         const user = allMembers.find(m => String(m.secretCode).trim() === inputCode);
-
         if (user) {
             sessionStorage.setItem('userCode', inputCode);
             document.getElementById('loginArea').style.display = 'none';
             document.getElementById('resultSection').style.display = 'block';
             document.getElementById('displayName').innerText = user.userName;
-            
             const tName = user.userName.replace(/^(นาย|นางสาว|นาง|ว่าที่ร้อยตรี|ดร\.)/g, "").replace(/\s+/g, "").trim();
             filteredData = allRecords.filter(r => {
                 const rName = r.name.replace(/^(นาย|นางสาว|นาง|ว่าที่ร้อยตรี|ดร\.)/g, "").replace(/\s+/g, "").trim();
                 return rName.includes(tName) || tName.includes(rName);
             }).reverse();
-            
             currentPage = 1; 
             displayData();
         } else if (!isAuto) {
@@ -154,15 +172,27 @@
 
         items.forEach(item => {
             const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
-            const link = item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<button class="btn btn-light btn-sm w-100" disabled>ไม่มีไฟล์</button>';
             
-            tableBody.innerHTML += `<tr><td class="ps-4">${item.date}</td><td class="fw-bold">${item.title}</td><td class="text-center"><span class="status-badge ${sClass}">${item.status}</span></td><td class="text-center pe-4">${link}</td></tr>`;
+            // ปรับปุ่มดูไฟล์สำหรับ Desktop และ Mobile ให้แยกกันเพื่อความสวยงาม
+            const linkDesktop = item.file ? `<a href="${item.file}" target="_blank" class="btn-open-desktop"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>';
+            const linkMobile = item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<button class="btn btn-light btn-sm w-100" disabled>ไม่มีไฟล์</button>';
+            
+            // แสดงผลตาราง (Desktop)
+            tableBody.innerHTML += `
+                <tr>
+                    <td class="ps-4 col-date">${item.date}</td>
+                    <td class="fw-bold text-wrap">${item.title}</td>
+                    <td class="col-status"><span class="status-badge ${sClass}">${item.status}</span></td>
+                    <td class="pe-4 col-action">${linkDesktop}</td>
+                </tr>`;
+
+            // แสดงผลการ์ด (Mobile)
             mobileCards.innerHTML += `
-            <div class="mobile-item-card shadow-sm">
-                <div class="d-flex justify-content-between mb-2"><span class="small text-muted">${item.date}</span><span class="status-badge ${sClass}">${item.status}</span></div>
-                <div class="fw-bold mb-3">${item.title}</div>
-                <div>${link}</div>
-            </div>`;
+                <div class="mobile-item-card shadow-sm">
+                    <div class="d-flex justify-content-between mb-2"><span class="small text-muted">${item.date}</span><span class="status-badge ${sClass}">${item.status}</span></div>
+                    <div class="fw-bold mb-3">${item.title}</div>
+                    <div>${linkMobile}</div>
+                </div>`;
         });
         
         document.getElementById('pageInfo').innerText = `${currentPage} / ${Math.ceil(filteredData.length / rowsPerPage) || 1}`;
@@ -170,7 +200,6 @@
 
     function changePage(dir) { currentPage += dir; displayData(); window.scrollTo(0,0); }
 
-    // ฟังก์ชัน Logout แบบรวดเร็ว (ไม่มี Loading)
     function handleLogout() { 
         sessionStorage.removeItem('userCode'); 
         location.reload(); 
