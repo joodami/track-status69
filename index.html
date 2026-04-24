@@ -165,38 +165,43 @@
         }
     }
 
-    function displayData() {
+   function displayData() {
     const tableBody = document.getElementById('tableBody'), mobileCards = document.getElementById('mobileCards');
-    tableBody.innerHTML = ''; mobileCards.innerHTML = '';
+    // ล้างข้อมูลเก่าออกก่อนแสดงผลใหม่
+    tableBody.innerHTML = ''; 
+    mobileCards.innerHTML = '';
+    
+    // แบ่งหน้าข้อมูล (Pagination)
     const items = filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
     items.forEach(item => {
+        // กำหนดสีของสถานะ (Badge)
         const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
 
-        // --- เพิ่มการจัดการวันที่ให้เป็นภาษาไทย ---
+        // --- [เริ่ม] ส่วนจัดการวันที่ไทยแบบเต็ม (24 เมษายน 2569) ---
         let displayDate = item.date;
         try {
             if (item.date) {
                 const dateObj = new Date(item.date);
-                // ตรวจสอบว่าเป็นวันที่ที่ถูกต้องหรือไม่
                 if (!isNaN(dateObj.getTime())) {
-                    displayDate = dateObj.toLocaleDateString('th-TH', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                    });
+                    const day = dateObj.toLocaleDateString('th-TH', { day: 'numeric' });
+                    const month = dateObj.toLocaleDateString('th-TH', { month: 'long' }); // เปลี่ยนเป็น 'long' เพื่อเอาชื่อเต็ม
+                    let year = dateObj.getFullYear();
+                    // ตรวจสอบปี: ถ้าปีน้อยกว่า 2500 ให้บวก 543 เพื่อเป็น พ.ศ.
+                    if (year < 2500) year += 543; 
+                    displayDate = `${day} ${month} ${year}`;
                 }
             }
         } catch (e) {
-            displayDate = item.date; // หากมีปัญหาให้ใช้ค่าเดิม
+            displayDate = item.date; 
         }
-        // ------------------------------------
+        // --- [จบ] ส่วนจัดการวันที่ ---
 
-        // ปรับปุ่มดูไฟล์สำหรับ Desktop และ Mobile ให้แยกกันเพื่อความสวยงาม
+        // จัดการปุ่มเปิดไฟล์: แยกสไตล์ Desktop และ Mobile ตามที่คุณครูวางโครงไว้
         const linkDesktop = item.file ? `<a href="${item.file}" target="_blank" class="btn-open-desktop"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>';
         const linkMobile = item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<button class="btn btn-light btn-sm w-100" disabled>ไม่มีไฟล์</button>';
 
-        // แสดงผลตาราง (Desktop)
+        // 1. แสดงผลรูปแบบตาราง (สำหรับมุมมองคอมพิวเตอร์ Desktop)
         tableBody.innerHTML += `
             <tr>
                 <td class="ps-4 col-date">${displayDate}</td>
@@ -205,7 +210,7 @@
                 <td class="pe-4 col-action">${linkDesktop}</td>
             </tr>`;
 
-        // แสดงผลการ์ด (Mobile)
+        // 2. แสดงผลรูปแบบการ์ด (สำหรับมุมมองมือถือ Mobile)
         mobileCards.innerHTML += `
             <div class="mobile-item-card shadow-sm">
                 <div class="d-flex justify-content-between mb-2">
@@ -217,8 +222,11 @@
             </div>`;
     });
 
-    document.getElementById('pageInfo').innerText = `${currentPage} / ${Math.ceil(filteredData.length / rowsPerPage) || 1}`;
+    // อัปเดตตัวเลขหน้า (เช่น 1 / 5)
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage) || 1;
+    document.getElementById('pageInfo').innerText = `${currentPage} / ${totalPages}`;
 }
+    
     
     function changePage(dir) { currentPage += dir; displayData(); window.scrollTo(0,0); }
 
