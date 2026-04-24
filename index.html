@@ -166,38 +166,60 @@
     }
 
     function displayData() {
-        const tableBody = document.getElementById('tableBody'), mobileCards = document.getElementById('mobileCards');
-        tableBody.innerHTML = ''; mobileCards.innerHTML = '';
-        const items = filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+    const tableBody = document.getElementById('tableBody'), mobileCards = document.getElementById('mobileCards');
+    tableBody.innerHTML = ''; mobileCards.innerHTML = '';
+    const items = filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
-        items.forEach(item => {
-            const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
-            
-            // ปรับปุ่มดูไฟล์สำหรับ Desktop และ Mobile ให้แยกกันเพื่อความสวยงาม
-            const linkDesktop = item.file ? `<a href="${item.file}" target="_blank" class="btn-open-desktop"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>';
-            const linkMobile = item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<button class="btn btn-light btn-sm w-100" disabled>ไม่มีไฟล์</button>';
-            
-            // แสดงผลตาราง (Desktop)
-            tableBody.innerHTML += `
-                <tr>
-                    <td class="ps-4 col-date">${item.date}</td>
-                    <td class="fw-bold text-wrap">${item.title}</td>
-                    <td class="col-status"><span class="status-badge ${sClass}">${item.status}</span></td>
-                    <td class="pe-4 col-action">${linkDesktop}</td>
-                </tr>`;
+    items.forEach(item => {
+        const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
 
-            // แสดงผลการ์ด (Mobile)
-            mobileCards.innerHTML += `
-                <div class="mobile-item-card shadow-sm">
-                    <div class="d-flex justify-content-between mb-2"><span class="small text-muted">${item.date}</span><span class="status-badge ${sClass}">${item.status}</span></div>
-                    <div class="fw-bold mb-3">${item.title}</div>
-                    <div>${linkMobile}</div>
-                </div>`;
-        });
-        
-        document.getElementById('pageInfo').innerText = `${currentPage} / ${Math.ceil(filteredData.length / rowsPerPage) || 1}`;
-    }
+        // --- เพิ่มการจัดการวันที่ให้เป็นภาษาไทย ---
+        let displayDate = item.date;
+        try {
+            if (item.date) {
+                const dateObj = new Date(item.date);
+                // ตรวจสอบว่าเป็นวันที่ที่ถูกต้องหรือไม่
+                if (!isNaN(dateObj.getTime())) {
+                    displayDate = dateObj.toLocaleDateString('th-TH', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                }
+            }
+        } catch (e) {
+            displayDate = item.date; // หากมีปัญหาให้ใช้ค่าเดิม
+        }
+        // ------------------------------------
 
+        // ปรับปุ่มดูไฟล์สำหรับ Desktop และ Mobile ให้แยกกันเพื่อความสวยงาม
+        const linkDesktop = item.file ? `<a href="${item.file}" target="_blank" class="btn-open-desktop"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>';
+        const linkMobile = item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<button class="btn btn-light btn-sm w-100" disabled>ไม่มีไฟล์</button>';
+
+        // แสดงผลตาราง (Desktop)
+        tableBody.innerHTML += `
+            <tr>
+                <td class="ps-4 col-date">${displayDate}</td>
+                <td class="fw-bold text-wrap">${item.title}</td>
+                <td class="col-status"><span class="status-badge ${sClass}">${item.status}</span></td>
+                <td class="pe-4 col-action">${linkDesktop}</td>
+            </tr>`;
+
+        // แสดงผลการ์ด (Mobile)
+        mobileCards.innerHTML += `
+            <div class="mobile-item-card shadow-sm">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="small text-muted">${displayDate}</span>
+                    <span class="status-badge ${sClass}">${item.status}</span>
+                </div>
+                <div class="fw-bold mb-3">${item.title}</div>
+                <div>${linkMobile}</div>
+            </div>`;
+    });
+
+    document.getElementById('pageInfo').innerText = `${currentPage} / ${Math.ceil(filteredData.length / rowsPerPage) || 1}`;
+}
+    
     function changePage(dir) { currentPage += dir; displayData(); window.scrollTo(0,0); }
 
     function handleLogout() { 
