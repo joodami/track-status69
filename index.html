@@ -26,7 +26,14 @@
         .login-wrapper { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         .card-login { width: 100%; max-width: 350px; border-radius: 24px; border: none; box-shadow: 0 20px 40px rgba(0,0,0,0.1); padding: 35px 25px; background: white; text-align: center; }
         .login-visual { font-size: 60px; background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
-        .pass-input { font-size: 24px; letter-spacing: 8px; text-align: center; border-radius: 15px; border: 2px solid #edf2f7; padding: 12px; background: #f8fafc; font-weight: 700; }
+        
+        /* ส่วนที่ปรับปรุง: เพิ่มความกว้างเผื่อไอคอนตา */
+        .pass-input { font-size: 24px; letter-spacing: 8px; text-align: center; border-radius: 15px; border: 2px solid #edf2f7; padding: 12px; background: #f8fafc; font-weight: 700; padding-right: 45px; }
+        
+        /* สไตล์ไอคอนตา */
+        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; font-size: 1.2rem; z-index: 10; }
+        .toggle-password:hover { color: var(--primary); }
+
         .btn-login { border-radius: 15px; padding: 14px; width: 100%; font-weight: 600; background: var(--primary); border: none; color: white; margin-top: 15px; }
 
         /* --- Result Section --- */
@@ -37,13 +44,11 @@
         .status-pending { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
         .status-success { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
         
-        /* ปรับแต่งตารางในคอมพิวเตอร์เพื่อแก้ปัญหาข้อความบีบ */
         .desktop-table table { width: 100%; table-layout: auto; }
         .col-date { width: 120px; white-space: nowrap; }
         .col-status { width: 140px; text-align: center; }
         .col-action { width: 160px; text-align: center; }
         
-        /* ห้ามข้อความในปุ่มและสถานะขึ้นบรรทัดใหม่ */
         .btn-open-desktop { 
             background: var(--main-gradient); 
             color: white !important; 
@@ -79,6 +84,7 @@
         <p class="text-muted small mb-4">ระบุเลขท้ายเบอร์โทรศัพท์ 5 ตัวของคุณครู</p>
         <div class="position-relative mb-2">
             <input type="password" id="secretInput" class="form-control pass-input" maxlength="5" placeholder="•••••" inputmode="numeric" onkeypress="if(event.keyCode==13) verifyAndSearch()">
+            <i class="fas fa-eye toggle-password" id="togglePassword" onclick="togglePassword()"></i>
         </div>
         <button class="btn btn-login" onclick="verifyAndSearch()">เข้าสู่ระบบ</button>
     </div>
@@ -130,6 +136,21 @@
     let allMembers = [], allRecords = [], filteredData = [], currentPage = 1;
     const rowsPerPage = 10;
 
+    // ฟังก์ชันใหม่: สำหรับกดเปิด-ปิดตา
+    function togglePassword() {
+        const input = document.getElementById('secretInput');
+        const icon = document.getElementById('togglePassword');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
     window.onload = async () => {
         const savedCode = sessionStorage.getItem('userCode');
         try {
@@ -167,27 +188,22 @@
 
    function displayData() {
     const tableBody = document.getElementById('tableBody'), mobileCards = document.getElementById('mobileCards');
-    // ล้างข้อมูลเก่าออกก่อนแสดงผลใหม่
     tableBody.innerHTML = ''; 
     mobileCards.innerHTML = '';
     
-    // แบ่งหน้าข้อมูล (Pagination)
     const items = filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
     items.forEach(item => {
-        // กำหนดสีของสถานะ (Badge)
         const sClass = item.status === "พิจารณาแล้ว" ? "status-success" : "status-pending";
 
-        // --- [เริ่ม] ส่วนจัดการวันที่ไทยแบบเต็ม (24 เมษายน 2569) ---
         let displayDate = item.date;
         try {
             if (item.date) {
                 const dateObj = new Date(item.date);
                 if (!isNaN(dateObj.getTime())) {
                     const day = dateObj.toLocaleDateString('th-TH', { day: 'numeric' });
-                    const month = dateObj.toLocaleDateString('th-TH', { month: 'long' }); // เปลี่ยนเป็น 'long' เพื่อเอาชื่อเต็ม
+                    const month = dateObj.toLocaleDateString('th-TH', { month: 'long' }); 
                     let year = dateObj.getFullYear();
-                    // ตรวจสอบปี: ถ้าปีน้อยกว่า 2500 ให้บวก 543 เพื่อเป็น พ.ศ.
                     if (year < 2500) year += 543; 
                     displayDate = `${day} ${month} ${year}`;
                 }
@@ -195,13 +211,10 @@
         } catch (e) {
             displayDate = item.date; 
         }
-        // --- [จบ] ส่วนจัดการวันที่ ---
 
-        // จัดการปุ่มเปิดไฟล์: แยกสไตล์ Desktop และ Mobile ตามที่คุณครูวางโครงไว้
         const linkDesktop = item.file ? `<a href="${item.file}" target="_blank" class="btn-open-desktop"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<span class="text-muted small">ไม่มีไฟล์</span>';
         const linkMobile = item.file ? `<a href="${item.file}" target="_blank" class="btn-open"><i class="fas fa-file-pdf"></i> เปิดดูเอกสาร</a>` : '<button class="btn btn-light btn-sm w-100" disabled>ไม่มีไฟล์</button>';
 
-        // 1. แสดงผลรูปแบบตาราง (สำหรับมุมมองคอมพิวเตอร์ Desktop)
         tableBody.innerHTML += `
             <tr>
                 <td class="ps-4 col-date">${displayDate}</td>
@@ -210,7 +223,6 @@
                 <td class="pe-4 col-action">${linkDesktop}</td>
             </tr>`;
 
-        // 2. แสดงผลรูปแบบการ์ด (สำหรับมุมมองมือถือ Mobile)
         mobileCards.innerHTML += `
             <div class="mobile-item-card shadow-sm">
                 <div class="d-flex justify-content-between mb-2">
@@ -222,11 +234,9 @@
             </div>`;
     });
 
-    // อัปเดตตัวเลขหน้า (เช่น 1 / 5)
     const totalPages = Math.ceil(filteredData.length / rowsPerPage) || 1;
     document.getElementById('pageInfo').innerText = `${currentPage} / ${totalPages}`;
 }
-    
     
     function changePage(dir) { currentPage += dir; displayData(); window.scrollTo(0,0); }
 
